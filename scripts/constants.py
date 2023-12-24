@@ -9,10 +9,10 @@ HEALTH = 100
 MONEY = 650
 TOTAL_LEVELS = 15
 
-# enemy constants
+# константа enemy
 SPAWN_COOLDOWN = 400
 
-# turret constants
+# константа turret
 TURRET_LEVELS = 4
 BUY_COST = 200
 UPGRADE_COST = 100
@@ -21,3 +21,29 @@ LEVEL_COMPLETE_REWARD = 100
 ANIMATION_STEPS = 8
 ANIMATION_DELAY = 15
 DAMAGE = 5
+
+# характеристики уровней turret
+STATS = [
+    {
+        # 1 level
+        "range": 70,
+        "cooldown": 2000,
+    },
+    {
+        # 2 level
+        "range": 140,
+        "cooldown": 1700,
+    },
+    {
+        # 3 level
+        "range": 190,
+        "cooldown": 1500,
+    },
+    {
+        # 4 level
+        "range": 235,
+        "cooldown": 1200,
+    }
+]
+
+
