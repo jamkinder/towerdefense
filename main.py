@@ -1,0 +1,2 @@
+import visual
+visual.startgame()
