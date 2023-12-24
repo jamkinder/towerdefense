@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+from scripts import constants as const
 
 pygame.init()
 size = WIDTH, HEIGHT = 500, 500
@@ -9,6 +10,8 @@ screen = pygame.display.set_mode(size)
 # группы спрайтов
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
+
+tile_width = tile_height = const.TILE_SIZE
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -45,8 +48,6 @@ def load_level(filename):
     thislevel = list(map(lambda x: x.ljust(max_width, '.'), level_map))
     return thislevel
 
-
-tile_width = tile_height = 50
 
 tile_images = {
     'wall': load_image('forest.png', transforms=(tile_width, tile_height)),
