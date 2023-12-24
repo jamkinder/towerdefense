@@ -2,6 +2,7 @@ import pygame
 import sys
 import os
 from scripts import constants as const
+from scripts import turrets
 
 pygame.init()
 size = WIDTH, HEIGHT = 500, 500
@@ -10,6 +11,7 @@ screen = pygame.display.set_mode(size)
 # группы спрайтов
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
+turrets_group = pygame.sprite.Group()
 
 tile_width = tile_height = const.TILE_SIZE
 
@@ -62,8 +64,8 @@ tile_images = {
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
+    def __init__(self, tile_type, pos_x, pos_y, *groups):
+        super().__init__(*groups)
         self.image = tile_images[tile_type]
 
         self.rect = self.image.get_rect().move(
@@ -75,24 +77,26 @@ def generate_level(level):
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':  # вид грязи
-                Tile('empty', x, y)
+                Tile('empty', x, y, all_sprites)
             elif level[y][x] == 't':  # turret - башня
-                Tile('gun', x, y)
-                Tile('turret', x, y)
+                Tile('gun', x, y, tiles_group, all_sprites)
+                turret = turrets.Turret(tile_width * x, tile_height * y, tile_images['turret'])
+                turrets_group.add(turret)
+                all_sprites.add(turret)
             elif level[y][x] == 'p':  # place - свободное место под башню
-                Tile('gun', x, y)
+                Tile('gun', x, y, tiles_group, all_sprites)
             elif level[y][x] == '#':  # лес
-                Tile('wall', x, y)
+                Tile('wall', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'c':  # castle - замок
-                Tile('castle', x, y)
+                Tile('castle', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'l':  # lake - озеро
-                Tile('lake', x, y)
+                Tile('lake', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'h':  # вид грязи
-                Tile('grasshor', x, y)
+                Tile('grasshor', x, y, all_sprites)
             elif level[y][x] == ',':  # вид грязи
-                Tile('grassfull', x, y)
+                Tile('grassfull', x, y, all_sprites)
     # вернем игрока, а также размер поля в клетках
-    return all_sprites, tiles_group
+    return all_sprites, tiles_group, turrets_group
 
 
 def generate_visual():

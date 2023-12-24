@@ -1,5 +1,4 @@
 import pygame
-from scripts import visual
 from scripts import constants as const
 
 
@@ -11,7 +10,7 @@ class Turret(pygame.sprite.Sprite):
         self.range = const.STATS[self.upgrade_level - 1].get("range")
         self.cooldown = const.STATS[self.upgrade_level - 1].get("cooldown")
 
-        self.image = visual.load_image(image, transforms=(const.TILE_SIZE, const.TILE_SIZE))
+        self.image = image
 
         self.rect = self.image.get_rect()
         self.rect.x = x
