@@ -1,2 +1,3 @@
-import visual
+from scripts import visual
+
 visual.startgame()
