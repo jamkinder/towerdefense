@@ -95,7 +95,7 @@ tile_images = {
 player_image = load_image('mar.png')
 
 tile_width = tile_height = 50
-
+#1
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
