@@ -87,10 +87,13 @@ def load_level(filename):
     return thislevel
 
 tile_images = {
-    'wall': load_image('box.png'),
+    'wall': load_image('forest.png'),
+    'lake': load_image("lake.png"),
     'empty': load_image('grass.png'),
     'gun': load_image('gunplace.png'),
-    'castle': load_image('newcastle.png')
+    'castle': load_image('newcastle.png'),
+    'grasshor': load_image('grasshor.png'),
+    'grassfull': load_image('grassfull.png')
 }
 player_image = load_image('mar.png')
 
@@ -150,6 +153,12 @@ def generate_level(level):
                 Tile('wall', x, y)
             elif level[y][x] == 'c':
                 Tile('castle',x,y)
+            elif level[y][x] == 'l':
+                Tile('lake',x,y)
+            elif level[y][x] == 'h':
+                Tile('grasshor',x,y)
+            elif level[y][x] == ',':
+                Tile('grassfull',x,y)
             elif level[y][x] == '@':
                 Tile('empty', x, y)
                 new_player = Player(x, y)
