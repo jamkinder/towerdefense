@@ -7,7 +7,7 @@ STATS = [
   {
     #2 level
     "range": 140,
-    "cooldown": 1750,
+    "cooldown": 1700,
   },
   {
     #3 level
