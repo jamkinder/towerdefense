@@ -1,11 +1,13 @@
 import pygame
 from scripts import visual
-
-
+from scripts import enemyspawnerData as spawner
+from scripts import constants as const
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, sheet, tiles_group):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, x, y, sheet, tiles_group,castle_group):
+        self.font = pygame.font.SysFont(None, 24)
+        self.img = self.font.render('', True, 'BLUE')
 
+        pygame.sprite.Sprite.__init__(self)
         self.frames = []
         image_sheet = visual.load_image(sheet, transforms=(25, 35))
         self.cut_sheet(image_sheet, 1, 1)
@@ -15,10 +17,13 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
+        self.castle = castle_group
         self.tiles_group = tiles_group
 
-        self.vx, self.vy = -1, 1
+        self.upgrade_level = 1
+        self.healt = spawner.DATA[self.upgrade_level - 1].get("health")
+        speed = spawner.DATA[self.upgrade_level - 1].get("speed")
+        self.vx, self.vy = -speed, speed
 
         self.trajectory = 0  # если trajectory кратна 2, то движемся по y, наоборот x
 
@@ -34,6 +39,9 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         # self.cur_frame = (self.cur_frame + 1) % 2
         # self.image = self.frames[self.cur_frame]
+        if self.healt <= 0:
+            const.MONEY += const.KILL_REWARD
+            self.kill()
 
         if self.trajectory % 2 == 0:
             self.rect = self.rect.move(0, self.vy)
@@ -41,6 +49,9 @@ class Enemy(pygame.sprite.Sprite):
             self.rect = self.rect.move(self.vx, 0)
         if pygame.sprite.spritecollideany(self, self.tiles_group):
             self.rotate()
+        self.img = self.font.render(str(self.healt), True, 'red')
+        visual.screen.blit(self.img,(self.rect.x,self.rect.y - 5))
+
 
     def rotate(self):
         if self.trajectory % 2 == 0:
@@ -53,8 +64,14 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.rect = self.rect.move(self.vx * -(10 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.tiles_group):
-                self.vy *= -1
-                self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))
+                    self.vy *= -1
+                    self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))
             else:
                 self.rect = self.rect.move(0, -self.vy * (50 // abs(self.vy)))
+            if pygame.sprite.spritecollideany(self, self.castle):
+                visual.castle.take_damage(1)
+                self.kill()
+
+
+
         self.trajectory += 1

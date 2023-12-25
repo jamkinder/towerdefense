@@ -16,10 +16,10 @@ SPAWN_COOLDOWN = 400
 TURRET_LEVELS = 4
 BUY_COST = 200
 UPGRADE_COST = 100
-KILL_REWARD = 1
+KILL_REWARD = 25
 LEVEL_COMPLETE_REWARD = 100
 ANIMATION_STEPS = 8
-ANIMATION_DELAY = 15
+ANIMATION_DELAY = 100
 DAMAGE = 5
 
 # характеристики уровней turret
@@ -32,16 +32,16 @@ STATS = [
     {
         # 2 level
         "range": 140,
-        "cooldown": 1700,
+        "cooldown": 1500,
     },
     {
         # 3 level
         "range": 190,
-        "cooldown": 1500,
+        "cooldown": 1000,
     },
     {
         # 4 level
         "range": 235,
-        "cooldown": 1200,
+        "cooldown": 500,
     }
 ]

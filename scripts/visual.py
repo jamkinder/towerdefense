@@ -18,6 +18,9 @@ clicked = False
 can_place_turr = False
 font = pygame.font.SysFont(None, 44)
 img = font.render('', True, 'BLUE')
+screen.blit(img,(50,50))
+font2 = pygame.font.SysFont(None, 44)
+imgcastle = font.render('', True, 'RED')
 
 
 
@@ -169,14 +172,32 @@ class Button(): #класс кнопок
                     can_place_turr = False
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
+class Castle(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(color=(255, 0, 0, 0.5))
+        self.rect = self.image.get_rect()
+        self.rect.center = (WIDTH - 50, HEIGHT- 25)
+        self.hp = 10
+        self.pos = (440,480)
+    def take_damage(self,damage):
+        self.hp -= damage
+    def show(self):
+        pass
+
+
+
 
 # группы спрайтов
 vertical_borders = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+castle_group = pygame.sprite.Group()
 horizontal_borders = pygame.sprite.Group()
-
+castle = Castle()
+castle_group.add(castle)
 
 # class Camera:
 #     # зададим начальный сдвиг камеры

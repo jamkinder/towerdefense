@@ -3,8 +3,9 @@ from scripts import turrets as t
 from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
-from scripts import missile
+
 money = const.MONEY
+
 
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
@@ -45,12 +46,14 @@ all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 turret_group = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
-
 all_sprites, tiles_group, turret_group = visual.generate_visual()
 
-enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group)
-enemy_group.add(enemy)
-all_sprites.add(enemy)
+update_time = pygame.time.get_ticks()
+
+for i in range(0, -10 * const.TILE_SIZE, -const.TILE_SIZE):
+    enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
+    enemy_group.add(enemy)
+    all_sprites.add(enemy)
 
 selected_turret = None
 
@@ -61,11 +64,12 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             x, y = event.pos
-            if create_turret(x, y) and visual.can_place_turr:
+            if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0:
                 # ровно ставим турель
+                const.MONEY -= const.BUY_COST
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
-                                      visual.load_image('archer_level_1.png',
+                                      visual.load_image('archer_level_1.png', colorkey=(0, 0, 0),
                                                         transforms=(const.TILE_SIZE, const.TILE_SIZE)))
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
@@ -77,6 +81,7 @@ while running:
 
     # tiles_group.draw(screen)
     all_sprites.draw(screen)
+    #visual.castle_group.draw(screen)
     # скроем диапазоны каждой башни
     clear_selected_turret()
 
@@ -96,7 +101,10 @@ while running:
     if visual.can_place_turr:
         visual.cancelbutton.draw()
     visual.img = visual.font.render(str(money), True, 'gray')
-
+    visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
+    visual.screen.blit(visual.img,(100,15))
+    visual.screen.blit(visual.imgcastle, (460, 425))
+    money = const.MONEY
     pygame.display.flip()
     pygame.display.update()
 
