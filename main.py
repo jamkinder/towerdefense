@@ -51,7 +51,7 @@ all_sprites, tiles_group, turret_group = visual.generate_visual()
 update_time = pygame.time.get_ticks()
 
 for i in range(0, -10 * const.TILE_SIZE, -const.TILE_SIZE):
-    enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
+    enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group)
     enemy_group.add(enemy)
     all_sprites.add(enemy)
 
@@ -81,7 +81,7 @@ while running:
 
     # tiles_group.draw(screen)
     all_sprites.draw(screen)
-    #visual.castle_group.draw(screen)
+    # visual.castle_group.draw(screen)
     # скроем диапазоны каждой башни
     clear_selected_turret()
 
@@ -102,7 +102,7 @@ while running:
         visual.cancelbutton.draw()
     visual.img = visual.font.render(str(money), True, 'gray')
     visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
-    visual.screen.blit(visual.img,(100,15))
+    visual.screen.blit(visual.img, (100, 15))
     visual.screen.blit(visual.imgcastle, (460, 425))
     money = const.MONEY
     pygame.display.flip()

@@ -15,19 +15,20 @@ class Missile(pygame.sprite.Sprite):
 
         self.target = target
         self.damage = damage
-        self.angle = 90
+        self.angle = 0
+
+        self.rotate()
 
         self.enemy_group = pygame.sprite.Group()
         self.enemy_group.add(self.target)
         # определяем направление к точке, в которой находится враг
-        self.vx, self.vy = (self.target.rect.x - self.rect.x) / 20 * abs(target.vx), (
-                self.target.rect.y - self.rect.y) / 20 * abs(target.vy)
+        self.vx, self.vy = (self.target.rect.x - self.rect.x) / 15 * abs(target.vx), (
+                self.target.rect.y - self.rect.y) / 15 * abs(target.vy)
 
     def update(self):
         # если прошло время поворачивает стрелу
         if pygame.time.get_ticks() - self.update_time > const.ANIMATION_DELAY:
             self.update_time = pygame.time.get_ticks()
-            self.rotate()
         # перемешает стрелу
         self.rect = self.rect.move(self.vx, self.vy)
         # если стрела каснулась врага или вышла за пределы экрана, удаляем её
@@ -39,5 +40,7 @@ class Missile(pygame.sprite.Sprite):
     def rotate(self):  # поварачивает стрелу
         dist_x = self.target.rect.x - self.rect.x
         dist_y = self.target.rect.y - self.rect.y
-        self.angle = math.degrees(math.atan2(dist_y, dist_x))
+        if dist_y > 0:
+            self.angle = 180
+        self.angle += math.degrees(math.atan((dist_x/dist_y)))
         self.image = pygame.transform.rotate(self.image, self.angle)

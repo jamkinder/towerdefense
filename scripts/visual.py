@@ -18,13 +18,9 @@ clicked = False
 can_place_turr = False
 font = pygame.font.SysFont(None, 44)
 img = font.render('', True, 'BLUE')
-screen.blit(img,(50,50))
+screen.blit(img, (50, 50))
 font2 = pygame.font.SysFont(None, 44)
 imgcastle = font.render('', True, 'RED')
-
-
-
-
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -47,11 +43,12 @@ def load_image(name, colorkey=None, transforms=None):
         image = pygame.transform.scale(image, transforms)
     return image
 
+
 # подгрузка картинок кнопок
 shop_image = load_image('shopbutton.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
-player_image = load_image('player.png',transforms=(tile_width,tile_height))
-cancel_image = load_image('cancel.png',transforms=(tile_width * 1.5,tile_height))
+player_image = load_image('player.png', transforms=(tile_width, tile_height))
+cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
 
 
 def load_level(filename):
@@ -119,48 +116,50 @@ def generate_level(level):
 def generate_visual():
     return generate_level(load_level('map.txt'))
 
-class Button(): #класс кнопок
-    def __init__(self,x,y,image,scale,type):
+
+class Button():  # класс кнопок
+    def __init__(self, x, y, image, scale, type):
         self._type = type
         width = image.get_width()
         height = image.get_height()
-        self.image = pygame.transform.scale(image,(int(width * scale),int(height * scale)))
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
         shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 4))
         width = shop_menu_image.get_width()
         height = shop_menu_image.get_height()
-        self.image2 = pygame.transform.scale(shop_menu_image,(int(width * 1),int(height * 1)))
+        self.image2 = pygame.transform.scale(shop_menu_image, (int(width * 1), int(height * 1)))
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
+        self.rect.topleft = (x, y)
         global clicked
         self.clicked = clicked
-    def draw(self): # отрисовываем кнопки и выполняем их действия
+
+    def draw(self):  # отрисовываем кнопки и выполняем их действия
         global clicked
         pos = pygame.mouse.get_pos()
-        if self._type == 'shop': #кнопка открытия меню магазина
+        if self._type == 'shop':  # кнопка открытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
                 if pygame.mouse.get_pressed()[0] == 1 and clicked == False:
                     clicked = True
                     self.clicked = True
-                    screen.blit(self.image2,(self.rect.x,self.rect.y))
+                    screen.blit(self.image2, (self.rect.x, self.rect.y))
             # if pygame.mouse.get_pressed()[0] == 0:
             #     self.clicked = False
             if clicked:
                 screen.blit(self.image2, (self.rect.x, self.rect.y))
-        elif self._type == 'exit': # кнопка закрытия меню магазина
+        elif self._type == 'exit':  # кнопка закрытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
                 if pygame.mouse.get_pressed()[0] == 1 and clicked:
                     clicked = False
                     self.clicked = clicked
-                    screen.blit(self.image2,(0,0))
-        elif self._type == 'buy': # кнопка разрешает строительство башен и закрывает меню магазина
+                    screen.blit(self.image2, (0, 0))
+        elif self._type == 'buy':  # кнопка разрешает строительство башен и закрывает меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
                 if pygame.mouse.get_pressed()[0] == 1 and clicked:
                     clicked = False
                     self.clicked = clicked
-                    screen.blit(self.image2,(0,0))
+                    screen.blit(self.image2, (0, 0))
                     global can_place_turr
                     can_place_turr = True
         elif self._type == 'cancel':
@@ -170,7 +169,8 @@ class Button(): #класс кнопок
                     clicked = False
                     self.clicked = clicked
                     can_place_turr = False
-        screen.blit(self.image,(self.rect.x,self.rect.y))
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
 
 class Castle(pygame.sprite.Sprite):
     def __init__(self):
@@ -178,15 +178,15 @@ class Castle(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH - 50, HEIGHT- 25)
+        self.rect.center = (WIDTH - 50, HEIGHT - 25)
         self.hp = 10
-        self.pos = (440,480)
-    def take_damage(self,damage):
+        self.pos = (440, 480)
+
+    def take_damage(self, damage):
         self.hp -= damage
+
     def show(self):
         pass
-
-
 
 
 # группы спрайтов
@@ -216,8 +216,8 @@ castle_group.add(castle)
 #         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-shop_btn = Button(0,0,shop_image,1,'shop') # создаем shop кнопку
-exit_btn = Button(83,145,exit_image,1,'exit')
-buytowerbutton = Button(5,60,shop_image,1,'buy')
-cancelbutton = Button(0,HEIGHT - 50,cancel_image,1,'cancel')
-print(type(shop_btn))
+shop_btn = Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
+exit_btn = Button(83, 145, exit_image, 1, 'exit')
+buytowerbutton = Button(5, 60, shop_image, 1, 'buy')
+cancelbutton = Button(0, HEIGHT - 50, cancel_image, 1, 'cancel')
+# print(type(shop_btn))
