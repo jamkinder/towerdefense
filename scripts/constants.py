@@ -1,17 +1,17 @@
-ROWS = 14
-COLS = 14
+ROWS = 10
+COLS = 10
 TILE_SIZE = 50
 SIDE_PANEL = 300
 SCREEN_WIDTH = TILE_SIZE * COLS
 SCREEN_HEIGHT = TILE_SIZE * ROWS
-FPS = 30
+FPS = 60
 HEALTH = 100
 MONEY = 650
 TOTAL_LEVELS = 15
 
 # константа enemy
 SPAWN_COOLDOWN = 400
-#test
+
 # константа turret
 TURRET_LEVELS = 4
 BUY_COST = 200
@@ -45,5 +45,3 @@ STATS = [
         "cooldown": 1200,
     }
 ]
-
-
