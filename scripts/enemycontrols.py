@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.frames = []
-        image_sheet = visual.load_image(sheet)
+        image_sheet = visual.load_image(sheet, transforms=(25, 35))
         self.cut_sheet(image_sheet, 1, 1)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
@@ -18,7 +18,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.tiles_group = tiles_group
 
-        self.vx, self.vy = -5, 5
+        self.vx, self.vy = -1, 1
 
         self.trajectory = 0  # если trajectory кратна 2, то движемся по y, наоборот x
 
