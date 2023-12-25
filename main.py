@@ -3,8 +3,9 @@ from scripts import turrets as t
 from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
-from scripts import missile
+
 money = const.MONEY
+
 
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
@@ -65,8 +66,8 @@ while running:
                 # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
-                                      visual.load_image('archer_level_1.png',
-                                                        transforms=(const.TILE_SIZE, const.TILE_SIZE)))
+                                      visual.load_image('archer_level_1.png', colorkey=(0, 0, 0),
+                                                        transforms=(const.TILE_SIZE * 2, const.TILE_SIZE * 2)))
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
             else:  # показываем радиус

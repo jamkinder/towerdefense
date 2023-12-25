@@ -8,7 +8,7 @@ from scripts import visual
 class Turret(pygame.sprite.Sprite):
     def __init__(self, x, y, image):  # пока он принемает только одно изображение, а не несколько
         pygame.sprite.Sprite.__init__(self)
-        self.upgrade_level = 1
+        self.upgrade_level = 3
 
         self.range = const.STATS[self.upgrade_level - 1].get("range")
         self.cooldown = const.STATS[self.upgrade_level - 1].get("cooldown")
@@ -19,6 +19,10 @@ class Turret(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+        self.missile_group = pygame.sprite.Group()
+
+        self.update_time = pygame.time.get_ticks()
 
         # создание визуального радиуса башни
         self.range_image = pygame.Surface((self.range * 2, self.range * 2))
@@ -33,10 +37,14 @@ class Turret(pygame.sprite.Sprite):
 
     def update(self, enemy_group, surface):
         self.pick_target(enemy_group)
-        if self.target:
-            missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
-                                     (self.rect.x, self.rect.y), 5)
-            missil.update(surface)
+        if self.target:  # если враг находится в диапазоне
+            # если прошло достаточно времени с предыдущего  выстрела
+            if pygame.time.get_ticks() - self.update_time > self.cooldown:
+                # воспроизводим анимацию атаки и создаём снаряд
+                self.missile_group.add(self.attack())
+
+            self.missile_group.draw(surface)
+            self.missile_group.update()
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -53,3 +61,12 @@ class Turret(pygame.sprite.Sprite):
                 self.target = enemy
             else:
                 self.target = None
+
+    def attack(self):
+        # анимация атаки
+
+        # создаёт снаряд
+        self.update_time = pygame.time.get_ticks()
+        missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
+                                 (self.rect.x, self.rect.y), 5)
+        return missil
