@@ -1,6 +1,6 @@
 import pygame
 from scripts import visual
-
+from scripts import enemyspawnerData as spawner
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, sheet, tiles_group):
@@ -18,7 +18,10 @@ class Enemy(pygame.sprite.Sprite):
 
         self.tiles_group = tiles_group
 
-        self.vx, self.vy = -1, 1
+        self.upgrade_level = 1
+        self.healt = spawner.DATA[self.upgrade_level - 1].get("health")
+        speed = spawner.DATA[self.upgrade_level - 1].get("speed")
+        self.vx, self.vy = -speed, speed
 
         self.trajectory = 0  # если trajectory кратна 2, то движемся по y, наоборот x
 
@@ -34,6 +37,8 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         # self.cur_frame = (self.cur_frame + 1) % 2
         # self.image = self.frames[self.cur_frame]
+        if self.healt <= 0:
+            self.kill()
 
         if self.trajectory % 2 == 0:
             self.rect = self.rect.move(0, self.vy)

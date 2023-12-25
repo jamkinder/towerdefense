@@ -36,7 +36,7 @@ class Turret(pygame.sprite.Sprite):
         self.selected = False
 
     def update(self, enemy_group, surface):
-        self.pick_target(enemy_group)
+        self.target = self.pick_target(enemy_group)
         if self.target:  # если враг находится в диапазоне
             # если прошло достаточно времени с предыдущего  выстрела
             if pygame.time.get_ticks() - self.update_time > self.cooldown:
@@ -58,9 +58,9 @@ class Turret(pygame.sprite.Sprite):
             y_dist = enemy.rect.y - self.rect.y
             dist = sqrt(x_dist ** 2 + y_dist ** 2)
             if dist < self.range:
-                self.target = enemy
+                return enemy
             else:
-                self.target = None
+                return None
 
     def attack(self):
         # анимация атаки

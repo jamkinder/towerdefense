@@ -49,9 +49,12 @@ enemy_group = pygame.sprite.Group()
 
 all_sprites, tiles_group, turret_group = visual.generate_visual()
 
-enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group)
-enemy_group.add(enemy)
-all_sprites.add(enemy)
+update_time = pygame.time.get_ticks()
+
+for i in range(0, -10 * const.TILE_SIZE, -const.TILE_SIZE):
+    enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group)
+    enemy_group.add(enemy)
+    all_sprites.add(enemy)
 
 selected_turret = None
 
@@ -67,7 +70,7 @@ while running:
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
                                       visual.load_image('archer_level_1.png', colorkey=(0, 0, 0),
-                                                        transforms=(const.TILE_SIZE * 2, const.TILE_SIZE * 2)))
+                                                        transforms=(const.TILE_SIZE, const.TILE_SIZE)))
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
             else:  # показываем радиус
