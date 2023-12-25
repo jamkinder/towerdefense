@@ -15,7 +15,7 @@ tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
 tile_width = tile_height = const.TILE_SIZE
 clicked = False
-
+can_place_turr = False
 font = pygame.font.SysFont(None, 44)
 img = font.render('', True, 'BLUE')
 
@@ -48,7 +48,7 @@ def load_image(name, colorkey=None, transforms=None):
 shop_image = load_image('shopbutton.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png',transforms=(tile_width,tile_height))
-
+cancel_image = load_image('cancel.png',transforms=(tile_width * 1.5,tile_height))
 
 
 def load_level(filename):
@@ -130,10 +130,10 @@ class Button(): #класс кнопок
         self.rect.topleft = (x,y)
         global clicked
         self.clicked = clicked
-    def draw(self): # отрисовываем кнопки
+    def draw(self): # отрисовываем кнопки и выполняем их действия
         global clicked
         pos = pygame.mouse.get_pos()
-        if self._type == 'shop':
+        if self._type == 'shop': #кнопка открытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
                 if pygame.mouse.get_pressed()[0] == 1 and clicked == False:
@@ -144,13 +144,29 @@ class Button(): #класс кнопок
             #     self.clicked = False
             if clicked:
                 screen.blit(self.image2, (self.rect.x, self.rect.y))
-        elif self._type == 'exit':
+        elif self._type == 'exit': # кнопка закрытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
                 if pygame.mouse.get_pressed()[0] == 1 and clicked:
                     clicked = False
                     self.clicked = clicked
                     screen.blit(self.image2,(0,0))
+        elif self._type == 'buy': # кнопка разрешает строительство башен и закрывает меню магазина
+            if self.rect.collidepoint(pos):
+                self.clicked = clicked
+                if pygame.mouse.get_pressed()[0] == 1 and clicked:
+                    clicked = False
+                    self.clicked = clicked
+                    screen.blit(self.image2,(0,0))
+                    global can_place_turr
+                    can_place_turr = True
+        elif self._type == 'cancel':
+            if self.rect.collidepoint(pos):
+                self.clicked = clicked
+                if pygame.mouse.get_pressed()[0] == 1 and not clicked:
+                    clicked = False
+                    self.clicked = clicked
+                    can_place_turr = False
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
 
@@ -181,4 +197,6 @@ horizontal_borders = pygame.sprite.Group()
 
 shop_btn = Button(0,0,shop_image,1,'shop') # создаем shop кнопку
 exit_btn = Button(83,145,exit_image,1,'exit')
+buytowerbutton = Button(5,60,shop_image,1,'buy')
+cancelbutton = Button(0,HEIGHT - 50,cancel_image,1,'cancel')
 print(type(shop_btn))

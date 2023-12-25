@@ -39,7 +39,7 @@ while running:
                             turret.rect.x, turret.rect.y):
                         space_is_free = False
                 # если есть свободное место
-                if space_is_free:
+                if space_is_free and visual.can_place_turr:
                     # ровно ставим турель
                     new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                           y // const.TILE_SIZE * const.TILE_SIZE,
@@ -55,7 +55,11 @@ while running:
 # обновление экрана
     visual.shop_btn.draw()
     if visual.clicked:
+        visual.buytowerbutton.draw()
         visual.exit_btn.draw()
+    if visual.can_place_turr:
+        print('op')
+        visual.cancelbutton.draw()
     visual.img = visual.font.render(str(money), True, 'gray')
     screen.blit(visual.img, (95, 12))
     pygame.display.flip()
