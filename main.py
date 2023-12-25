@@ -22,7 +22,7 @@ enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group)
 
 enemy_group.add(enemy)
 all_sprites.add(enemy)
-
+money = 0
 running = True
 while running:
     for event in pygame.event.get():
@@ -49,13 +49,18 @@ while running:
                     all_sprites.add(new_turret)
     # отрисовка и изменение свойств объектов
     screen.fill('Black')
-
     # tiles_group.draw(screen)
     all_sprites.draw(screen)
     enemy_group.update()
 # обновление экрана
+    visual.shop_btn.draw()
+    if visual.clicked:
+        visual.exit_btn.draw()
+    visual.img = visual.font.render(str(money), True, 'gray')
+    screen.blit(visual.img, (95, 12))
     pygame.display.flip()
     pygame.display.update()
+
 
     clock.tick(FPS)
 pygame.quit()
