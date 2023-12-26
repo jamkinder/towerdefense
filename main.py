@@ -10,6 +10,7 @@ totalwave = 0
 time_the_next_wave = -1
 pluscoof = 20
 
+
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
     if visual.load_level('map.txt')[y // const.TILE_SIZE][x // const.TILE_SIZE] == 'p':
@@ -78,7 +79,9 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0 and event.button == 1:
+                visual.clicked = visual.can_place_turr = False
                 const.MONEY -= const.BUY_COST
+
                 # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
@@ -115,7 +118,11 @@ while running:
         visual.buytowerbutton.draw()
         visual.exit_btn.draw()
     if visual.can_place_turr:
+        mouse_pos = pygame.mouse.get_pos()
+        screen.blit(visual.load_image('archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
+                    (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
         visual.cancelbutton.draw()
+
 
     visual.img = visual.font.render(str(money), True, 'gray')
     visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
