@@ -71,7 +71,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect = self.rect.move(0, -self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.castle):
                 visual.castle.take_damage(1)
-                const.enemies_alive -= 1
+                const.enemies_alive -= 1 # изменяем количество живых монстров
                 self.kill()
 
 

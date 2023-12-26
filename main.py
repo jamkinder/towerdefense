@@ -50,7 +50,7 @@ all_sprites, tiles_group, turret_group = visual.generate_visual()
 
 update_time = pygame.time.get_ticks()
 
-def spawn_enemyes():
+def spawn_enemyes(): #функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(const.total_wave))) * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
         enemy_group.add(enemy)
@@ -105,7 +105,7 @@ while running:
     visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
     visual.screen.blit(visual.img,(100,15))
     visual.screen.blit(visual.imgcastle, (460, 425))
-    if const.enemies_alive == 0:
+    if const.enemies_alive == 0: # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
         totalwave += 1
         const.total_wave = totalwave
         const.enemies_alive = sum(enemydata.WAVES.get(str(const.total_wave)))

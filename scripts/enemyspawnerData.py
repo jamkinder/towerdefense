@@ -9,8 +9,4 @@ DATA = [{"health": 10,
          "speed": 3}]
 
 enemyesalive = 0
-# for i in WAVES:
-#     enemyesalive = sum(WAVES[i])
-#     print(enemyesalive)
-
 
