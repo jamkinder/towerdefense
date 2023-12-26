@@ -103,7 +103,6 @@ while running:
         selected_turret.selected = True  # показываем диапазон
     # отрисовываем башни
     for turrets in turret_group:
-        event = pygame.event.get()
         turrets.draw(screen)
 
     enemy_group.update()

@@ -28,7 +28,7 @@ TURRER = {'usual': [
         # 1 level
         'im': 'archer_level_1.png',
         'damage': 5,
-        "range": 70,
+        "range": 100,
         "cooldown": 1500,
         'cost': 200,
     },
@@ -36,7 +36,7 @@ TURRER = {'usual': [
         # 2 level
         'im': 'archer_level_2.png',
         'damage': 6.5,
-        "range": 100,
+        "range": 110,
         "cooldown": 1200,
         'cost': 300
     },
@@ -44,7 +44,7 @@ TURRER = {'usual': [
         # 3 level
         'im': 'archer_level_3.png',
         'damage': 8,
-        "range": 130,
+        "range": 120,
         "cooldown": 900,
         'cost': 500
     },
@@ -52,7 +52,7 @@ TURRER = {'usual': [
         # 4 level
         'im': 'archer_level_1.png',
         'damage': 9.5,
-        "range": 160,
+        "range": 130,
         "cooldown": 600,
         'cost': 600
     },
@@ -60,7 +60,7 @@ TURRER = {'usual': [
         # 5 level
         'im': 'archer_level_2.png',
         'damage': 11,
-        "range": 200,
+        "range": 140,
         "cooldown": 300,
         'cost': '-'
     }]
