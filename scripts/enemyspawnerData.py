@@ -12,4 +12,3 @@ DATA = [{"health": 100,
          'damage': 3}]
 
 enemyesalive = 0
-

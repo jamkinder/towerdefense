@@ -10,6 +10,7 @@ MONEY = 500
 TOTAL_LEVELS = 15
 
 # константа enemy
+TIME_UNTIL_THE_NEXT_WAVE = 2000  # 5 секунд
 SPAWN_COOLDOWN = 400
 
 # константа turret
@@ -50,7 +51,7 @@ TURRER = {'usual': [
     },
     {
         # 4 level
-        'im': 'archer_level_1.png',
+        'im': 'archer_level_4.png',
         'damage': 20,
         "range": 130,
         "cooldown": 300,
@@ -58,7 +59,7 @@ TURRER = {'usual': [
     },
     {
         # 5 level
-        'im': 'archer_level_2.png',
+        'im': 'archer_level_5.png',
         'damage': 40,
         "range": 140,
         "cooldown": 250,

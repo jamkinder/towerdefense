@@ -19,9 +19,10 @@ can_place_turr = False
 font = pygame.font.SysFont(None, 44)
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
-font2 = pygame.font.SysFont(None, 44)
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
+
+font_time = pygame.font.SysFont(None, 20)
 
 
 def load_image(name, colorkey=None, transforms=None):
