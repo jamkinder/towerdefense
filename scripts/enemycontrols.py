@@ -2,10 +2,12 @@ import pygame
 from scripts import visual
 from scripts import enemyspawnerData as spawner
 from scripts import constants as const
+
+
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, sheet, tiles_group,castle_group):
+    def __init__(self, x, y, sheet, tiles_group, castle_group):
         self.font = pygame.font.SysFont(None, 24)
-        self.img = self.font.render('', True, 'BLUE')
+        self.healt_img = self.font.render('', True, 'BLUE')
 
         pygame.sprite.Sprite.__init__(self)
         self.frames = []
@@ -39,20 +41,21 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         # self.cur_frame = (self.cur_frame + 1) % 2
         # self.image = self.frames[self.cur_frame]
+
         if self.healt <= 0:
             const.MONEY += const.KILL_REWARD
-            const.enemies_alive -= 1
             self.kill()
 
         if self.trajectory % 2 == 0:
             self.rect = self.rect.move(0, self.vy)
         else:
             self.rect = self.rect.move(self.vx, 0)
+
         if pygame.sprite.spritecollideany(self, self.tiles_group):
             self.rotate()
-        self.img = self.font.render(str(self.healt), True, 'red')
-        visual.screen.blit(self.img,(self.rect.x,self.rect.y - 5))
-
+        # показываем здоровье врагов
+        self.healt_img = self.font.render(str(self.healt), True, 'red')
+        visual.screen.blit(self.healt_img, (self.rect.x + 5, self.rect.y - 10))
 
     def rotate(self):
         if self.trajectory % 2 == 0:
@@ -65,15 +68,13 @@ class Enemy(pygame.sprite.Sprite):
         else:
             self.rect = self.rect.move(self.vx * -(10 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.tiles_group):
-                    self.vy *= -1
-                    self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))
+                self.vy *= -1
+                self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))
             else:
                 self.rect = self.rect.move(0, -self.vy * (50 // abs(self.vy)))
-            if pygame.sprite.spritecollideany(self, self.castle):
-                visual.castle.take_damage(1)
-                const.enemies_alive -= 1 # изменяем количество живых монстров
-                self.kill()
 
-
+        if pygame.sprite.spritecollideany(self, self.castle):
+            visual.castle.take_damage(1)
+            self.kill()
 
         self.trajectory += 1
