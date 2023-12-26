@@ -117,14 +117,15 @@ while running:
     if visual.clicked:
         visual.buytowerbutton.draw()
         visual.exit_btn.draw()
+        for turret in const.TURRER:
+            screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)), (15, 60))
     if visual.can_place_turr:
         mouse_pos = pygame.mouse.get_pos()
         screen.blit(visual.load_image('archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
                     (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
         visual.cancelbutton.draw()
 
-
-    visual.img = visual.font.render(str(money), True, 'gray')
+    visual.img = visual.font.render(str(money), True, (255, 215, 0))
     visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
     visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
 

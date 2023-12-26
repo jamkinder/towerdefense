@@ -221,5 +221,5 @@ castle_group.add(castle)
 
 shop_btn = Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 exit_btn = Button(83, 145, exit_image, 1, 'exit')
-buytowerbutton = Button(8, 60, buy_tower_image, 1, 'buy')
+buytowerbutton = Button(83, 60, buy_tower_image, 1, 'buy')
 cancelbutton = Button(0, HEIGHT - 50, cancel_image, 1, 'cancel')
