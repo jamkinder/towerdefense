@@ -140,7 +140,7 @@ class Button(): #класс кнопок
         if self._type == 'shop': #кнопка открытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
-                if pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+                if pygame.mouse.get_pressed()[1] == 1 and clicked == False:
                     clicked = True
                     self.clicked = True
                     screen.blit(self.image2,(self.rect.x,self.rect.y))

@@ -26,14 +26,17 @@ class Turret(pygame.sprite.Sprite):
 
         # создание визуального радиуса башни
         self.range_image = pygame.Surface((self.range * 2, self.range * 2))
+        self.upgrade_image = pygame.image.load('data/im/upgrade.png')
         self.range_image.fill((0, 0, 0))
         self.range_image.set_colorkey((0, 0, 0))
         pygame.draw.circle(self.range_image, "grey", (self.range, self.range), self.range)
         self.range_image.set_alpha(100)
         self.range_rect = self.range_image.get_rect()
         self.range_rect.center = self.rect.center
-
+        self.canupgrade = False
         self.selected = False
+        self.upgrade_menu = False
+        self.handled = 0
 
     def update(self, enemy_group, surface):
         self.target = self.pick_target(enemy_group)
@@ -48,9 +51,11 @@ class Turret(pygame.sprite.Sprite):
         else:
             self.missile_group = pygame.sprite.Group()
 
-    def draw(self, screen):
+    def draw(self, screen,event):
+        self.event = event
         screen.blit(self.image, self.rect)
         if self.selected:
+            screen.blit(self.upgrade_image,self.rect)
             screen.blit(self.range_image, self.range_rect)
 
     def pick_target(self, enemy_group):  # найти координаты цели

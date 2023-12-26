@@ -90,7 +90,7 @@ while running:
         selected_turret.selected = True  # показываем диапазон
     # отрисовываем башни
     for turrets in turret_group:
-        turrets.draw(screen)
+        turrets.draw(screen,ev)
 
     enemy_group.update()
     turret_group.update(enemy_group, screen)
