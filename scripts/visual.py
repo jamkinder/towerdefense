@@ -21,7 +21,7 @@ img = font.render('', True, 'BLUE')
 screen.blit(img,(50,50))
 font2 = pygame.font.SysFont(None, 44)
 imgcastle = font.render('', True, 'RED')
-
+wavetext = font.render('',True,'RED')
 
 
 
@@ -140,7 +140,8 @@ class Button(): #класс кнопок
         if self._type == 'shop': #кнопка открытия меню магазина
             if self.rect.collidepoint(pos):
                 self.clicked = clicked
-                if pygame.mouse.get_pressed()[1] == 1 and clicked == False:
+                if pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+                    print('p')
                     clicked = True
                     self.clicked = True
                     screen.blit(self.image2,(self.rect.x,self.rect.y))

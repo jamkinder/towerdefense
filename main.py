@@ -51,7 +51,7 @@ all_sprites, tiles_group, turret_group = visual.generate_visual()
 update_time = pygame.time.get_ticks()
 
 def spawn_enemyes(): #функция спавна врагов
-    for i in range(0, -sum(enemydata.WAVES.get(str(const.total_wave))) * const.TILE_SIZE, -const.TILE_SIZE):
+    for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
@@ -90,7 +90,8 @@ while running:
         selected_turret.selected = True  # показываем диапазон
     # отрисовываем башни
     for turrets in turret_group:
-        turrets.draw(screen)
+        event = pygame.event.get()
+        turrets.draw(screen,event)
 
     enemy_group.update()
     turret_group.update(enemy_group, screen)
@@ -103,12 +104,15 @@ while running:
         visual.cancelbutton.draw()
     visual.img = visual.font.render(str(money), True, 'gray')
     visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
+    visual.wavetext = visual.font.render('ВОЛНА: '+ str(totalwave),True,'red')
     visual.screen.blit(visual.img,(100,15))
     visual.screen.blit(visual.imgcastle, (460, 425))
+    visual.screen.blit(visual.wavetext,(WIDTH // 2.5,10))
     if const.enemies_alive == 0: # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
         totalwave += 1
+        enemydata.WAVES.update({str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5), round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
         const.total_wave = totalwave
-        const.enemies_alive = sum(enemydata.WAVES.get(str(const.total_wave)))
+        const.enemies_alive = sum(enemydata.WAVES.get(str(1)))
         spawn_enemyes()
     money = const.MONEY
     pygame.display.flip()

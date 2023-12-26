@@ -52,7 +52,6 @@ class Turret(pygame.sprite.Sprite):
             self.missile_group = pygame.sprite.Group()
 
     def draw(self, screen,event):
-        self.event = event
         screen.blit(self.image, self.rect)
         if self.selected:
             screen.blit(self.upgrade_image,self.rect)

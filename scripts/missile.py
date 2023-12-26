@@ -47,5 +47,6 @@ class Missile(pygame.sprite.Sprite):
         dist_y = self.target.rect.y - self.rect.y
         if dist_y > 0:
             self.angle = 180
-        self.angle += math.degrees(math.atan((dist_x / dist_y)))
-        self.image = pygame.transform.rotate(self.image, self.angle)
+        if dist_y != 0:
+            self.angle += math.degrees(math.atan((dist_x / dist_y)))
+            self.image = pygame.transform.rotate(self.image, self.angle)
