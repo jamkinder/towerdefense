@@ -27,9 +27,6 @@ class Missile(pygame.sprite.Sprite):
                 self.target.rect.y - self.rect.y) / 15 * abs(target.vy)
 
     def update(self):
-        # если прошло время поворачивает стрелу
-        if pygame.time.get_ticks() - self.update_time > const.ANIMATION_DELAY:
-            self.update_time = pygame.time.get_ticks()
         # перемешает стрелу
         self.rect = self.rect.move(self.vx, self.vy)
         # если стрела каснулась врага или вышла за пределы экрана, удаляем её

@@ -7,6 +7,7 @@ from scripts import enemyspawnerData as enemydata
 
 money = const.MONEY
 totalwave = 0
+time_the_next_wave = -1
 
 
 def create_turret(x, y):
@@ -39,7 +40,7 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group,1)
+        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
@@ -117,7 +118,7 @@ while running:
         visual.cancelbutton.draw()
 
     visual.img = visual.font.render(str(money), True, 'gray')
-    visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
+    visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
     visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
 
     visual.screen.blit(visual.img, (100, 15))
@@ -126,18 +127,34 @@ while running:
 
     # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
     if len(enemy_group) == 0:
-        totalwave += 1
-        if totalwave % 5 == 0:
-            enemydata.DATA[0].update({'health': enemydata.DATA[0].get('health') + 20})
-            print(enemydata.DATA[0])
-        if totalwave % 10 == 0:
-            enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group, visual.castle_group,3)
-            enemy_group.add(enemy)
-            all_sprites.add(enemy)
-            enemydata.WAVES.update(
-                {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1, round(enemydata.WAVES.get(str(1))[1] * 0)]})
+        # если time_the_next_wave содержит в себя время
+        if time_the_next_wave:
+            # получаем время, через сколько будет волна и выводим его
+            str_time = round(5 - float(str(abs(time_the_next_wave - pygame.time.get_ticks()) / 1000)[:3]), 1)
+            time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, 'red')
+            screen.blit(time, (200, const.SCREEN_HEIGHT - 20))
 
-        new_wave(totalwave)
+            # елси прошло достаточно времени с предыдущей волны
+            if (time_the_next_wave == -1 or pygame.time.get_ticks() - time_the_next_wave >=
+                    const.TIME_UNTIL_THE_NEXT_WAVE):
+                time_the_next_wave = None
+
+                totalwave += 1
+
+                if totalwave % 5 == 0:
+                    enemydata.DATA[0].update({'health': enemydata.DATA[0].get('health') + 20})
+
+                if totalwave % 10 == 0:
+                    enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group, visual.castle_group, 3)
+                    enemy_group.add(enemy)
+                    all_sprites.add(enemy)
+                    enemydata.WAVES.update(
+                        {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1,
+                                  round(enemydata.WAVES.get(str(1))[1] * 0)]})
+
+                new_wave(totalwave)
+        else:
+            time_the_next_wave = pygame.time.get_ticks()
 
     money = const.MONEY
     pygame.display.flip()

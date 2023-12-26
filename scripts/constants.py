@@ -10,6 +10,7 @@ MONEY = 500
 TOTAL_LEVELS = 15
 
 # константа enemy
+TIME_UNTIL_THE_NEXT_WAVE = 5000  # 5 секунд
 SPAWN_COOLDOWN = 400
 
 # константа turret

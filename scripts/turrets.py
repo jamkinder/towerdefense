@@ -43,8 +43,6 @@ class Turret(pygame.sprite.Sprite):
                 self.missile_group.add(self.attack())
             self.missile_group.draw(surface)
             self.missile_group.update()
-        else:
-            self.missile_group = pygame.sprite.Group()
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
