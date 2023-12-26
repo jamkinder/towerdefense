@@ -4,8 +4,10 @@ from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
 from scripts import enemyspawnerData as enemydata
+
 money = const.MONEY
-totalwave = 1
+totalwave = 0
+
 
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
@@ -30,9 +32,25 @@ def select_turret(x, y):
             return turret
 
 
-def clear_selected_turret():
+def clear_selected_turret():  # скрывает все радиусы башен
     for turret in turret_group:
         turret.selected = False
+
+
+def spawn_enemyes():  # функция спавна врагов
+    for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
+        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group,1)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
+
+
+def new_wave(totalwav):
+    totalwav += 1
+    enemydata.WAVES.update(
+        {str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5), round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
+    const.total_wave += totalwav
+    const.enemies_alive = sum(enemydata.WAVES.get('1'))
+    spawn_enemyes()
 
 
 pygame.init()
@@ -50,39 +68,34 @@ all_sprites, tiles_group, turret_group = visual.generate_visual()
 
 update_time = pygame.time.get_ticks()
 
-def spawn_enemyes(): #функция спавна врагов
-    for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
-        enemy_group.add(enemy)
-        all_sprites.add(enemy)
-
 selected_turret = None
-spawn_enemyes()
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
             running = False
-        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+        if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
-            if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0:
-                # ровно ставим турель
+            if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0 and event.button == 1:
                 const.MONEY -= const.BUY_COST
+                # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
-                                      visual.load_image('archer_level_1.png', colorkey=(0, 0, 0),
-                                                        transforms=(const.TILE_SIZE, const.TILE_SIZE)))
+                                      'usual')
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
-            else:  # показываем радиус
+            else:
                 selected_turret = select_turret(x, y)
+                if event.button == 3 and selected_turret:
+                    selected_turret.upgrade()
+                    selected_turret = None
 
     # отрисовка и изменение свойств объектов
     screen.fill('Black')
 
     # tiles_group.draw(screen)
     all_sprites.draw(screen)
-    #visual.castle_group.draw(screen)
+    # visual.castle_group.draw(screen)
     # скроем диапазоны каждой башни
     clear_selected_turret()
 
@@ -90,11 +103,11 @@ while running:
         selected_turret.selected = True  # показываем диапазон
     # отрисовываем башни
     for turrets in turret_group:
-        event = pygame.event.get()
-        turrets.draw(screen,event)
+        turrets.draw(screen)
 
     enemy_group.update()
     turret_group.update(enemy_group, screen)
+
     # обновление экрана
     visual.shop_btn.draw()
     if visual.clicked:
@@ -102,18 +115,30 @@ while running:
         visual.exit_btn.draw()
     if visual.can_place_turr:
         visual.cancelbutton.draw()
+
     visual.img = visual.font.render(str(money), True, 'gray')
     visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
-    visual.wavetext = visual.font.render('ВОЛНА: '+ str(totalwave),True,'red')
-    visual.screen.blit(visual.img,(100,15))
+    visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
+
+    visual.screen.blit(visual.img, (100, 15))
     visual.screen.blit(visual.imgcastle, (460, 425))
-    visual.screen.blit(visual.wavetext,(WIDTH // 2.5,10))
-    if const.enemies_alive == 0: # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
+    visual.screen.blit(visual.wavetext, (WIDTH // 2.5, 10))
+
+    # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
+    if len(enemy_group) == 0:
         totalwave += 1
-        enemydata.WAVES.update({str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5), round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
-        const.total_wave = totalwave
-        const.enemies_alive = sum(enemydata.WAVES.get(str(1)))
-        spawn_enemyes()
+        if totalwave % 5 == 0:
+            enemydata.DATA[0].update({'health': enemydata.DATA[0].get('health') + 20})
+            print(enemydata.DATA[0])
+        if totalwave % 10 == 0:
+            enemy = enemycontrols.Enemy(360, 0, 'mar.png', tiles_group, visual.castle_group,3)
+            enemy_group.add(enemy)
+            all_sprites.add(enemy)
+            enemydata.WAVES.update(
+                {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1, round(enemydata.WAVES.get(str(1))[1] * 0)]})
+
+        new_wave(totalwave)
+
     money = const.MONEY
     pygame.display.flip()
     pygame.display.update()

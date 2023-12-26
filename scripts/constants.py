@@ -6,7 +6,7 @@ SCREEN_WIDTH = TILE_SIZE * COLS
 SCREEN_HEIGHT = TILE_SIZE * ROWS
 FPS = 60
 HEALTH = 100
-MONEY = 650
+MONEY = 500
 TOTAL_LEVELS = 15
 
 # константа enemy
@@ -15,35 +15,53 @@ SPAWN_COOLDOWN = 400
 # константа turret
 TURRET_LEVELS = 4
 BUY_COST = 200
-UPGRADE_COST = 100
 KILL_REWARD = 25
 LEVEL_COMPLETE_REWARD = 100
 ANIMATION_STEPS = 8
 ANIMATION_DELAY = 100
-DAMAGE = 55
 total_wave = 1
 enemies_alive = 4
 
 # характеристики уровней turret
-STATS = [
+TURRER = {'usual': [
     {
         # 1 level
-        "range": 70,
-        "cooldown": 2000,
+        'im': 'archer_level_1.png',
+        'damage': 20,
+        "range": 150,
+        "cooldown": 1000,
+        'cost': 100,
     },
     {
         # 2 level
-        "range": 140,
-        "cooldown": 1500,
+        'im': 'archer_level_2.png',
+        'damage': 40,
+        "range": 170,
+        "cooldown": 800,
+        'cost': 250
     },
     {
         # 3 level
-        "range": 190,
-        "cooldown": 1000,
+        'im': 'archer_level_3.png',
+        'damage': 60,
+        "range": 200,
+        "cooldown": 900,
+        'cost': 400
     },
     {
         # 4 level
-        "range": 235,
-        "cooldown": 500,
-    }
-]
+        'im': 'archer_level_1.png',
+        'damage': 20,
+        "range": 130,
+        "cooldown": 300,
+        'cost': 600
+    },
+    {
+        # 5 level
+        'im': 'archer_level_2.png',
+        'damage': 40,
+        "range": 140,
+        "cooldown": 250,
+        'cost': 800
+    }]
+}

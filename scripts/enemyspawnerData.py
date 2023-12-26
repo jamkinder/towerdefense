@@ -1,10 +1,15 @@
 # wave лист заполняется по типу: кол-во легких, кол-во средних, кол-во тяжелых
 
-WAVES = {'1': [3, 1]}
-DATA = [{"health": 10,
-         "speed": 1},
-        {"health": 15,
-         "speed": 2}]
+WAVES = {'1': [1, 0]}
+DATA = [{"health": 100,
+         "speed": 1,
+         'damage': 1},
+        {"health": 150,
+         "speed": 2,
+         'damage': 1},
+        {'health': 600,
+         'speed': 1.5,
+         'damage': 3}]
 
 enemyesalive = 0
 
