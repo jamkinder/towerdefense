@@ -21,6 +21,8 @@ LEVEL_COMPLETE_REWARD = 100
 ANIMATION_STEPS = 8
 ANIMATION_DELAY = 100
 DAMAGE = 5
+total_wave = 1
+enemies_alive = 4
 
 # характеристики уровней turret
 STATS = [

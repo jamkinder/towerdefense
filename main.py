@@ -3,9 +3,9 @@ from scripts import turrets as t
 from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
-
+from scripts import enemyspawnerData as enemydata
 money = const.MONEY
-
+totalwave = 1
 
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
@@ -50,13 +50,14 @@ all_sprites, tiles_group, turret_group = visual.generate_visual()
 
 update_time = pygame.time.get_ticks()
 
-for i in range(0, -10 * const.TILE_SIZE, -const.TILE_SIZE):
-    enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
-    enemy_group.add(enemy)
-    all_sprites.add(enemy)
+def spawn_enemyes():
+    for i in range(0, -sum(enemydata.WAVES.get(str(const.total_wave))) * const.TILE_SIZE, -const.TILE_SIZE):
+        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group,visual.castle_group)
+        enemy_group.add(enemy)
+        all_sprites.add(enemy)
 
 selected_turret = None
-
+spawn_enemyes()
 running = True
 while running:
     for event in pygame.event.get():
@@ -104,6 +105,11 @@ while running:
     visual.imgcastle = visual.font2.render(str(visual.castle.hp), True, 'red')
     visual.screen.blit(visual.img,(100,15))
     visual.screen.blit(visual.imgcastle, (460, 425))
+    if const.enemies_alive == 0:
+        totalwave += 1
+        const.total_wave = totalwave
+        const.enemies_alive = sum(enemydata.WAVES.get(str(const.total_wave)))
+        spawn_enemyes()
     money = const.MONEY
     pygame.display.flip()
     pygame.display.update()

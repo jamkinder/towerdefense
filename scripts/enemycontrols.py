@@ -41,6 +41,7 @@ class Enemy(pygame.sprite.Sprite):
         # self.image = self.frames[self.cur_frame]
         if self.healt <= 0:
             const.MONEY += const.KILL_REWARD
+            const.enemies_alive -= 1
             self.kill()
 
         if self.trajectory % 2 == 0:
@@ -70,6 +71,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.rect = self.rect.move(0, -self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.castle):
                 visual.castle.take_damage(1)
+                const.enemies_alive -= 1
                 self.kill()
 
 
