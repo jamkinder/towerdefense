@@ -5,7 +5,7 @@ from scripts import constants as const
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, movingimage):
+    def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, rect):
         self.font = pygame.font.SysFont(None, 24)
         self.healt_img = self.font.render('', True, 'BLUE')
 
@@ -14,8 +14,7 @@ class Enemy(pygame.sprite.Sprite):
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
-        self.image2 = movingimage
-        self.rect = self.image2.get_rect()
+        self.rect = rect
         self.rect.x = x
         self.rect.y = y
         self.castle = castle_group
@@ -59,14 +58,14 @@ class Enemy(pygame.sprite.Sprite):
 
     def rotate(self):
         if self.trajectory % 2 == 0:
-            self.rect = self.rect.move(self.vx * (50 // abs(self.vx)), self.vy * -(10 // abs(self.vy)))
+            self.rect = self.rect.move(self.vx * (50 // abs(self.vx)), self.vy * -(5 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.tiles_group):
                 self.vx *= -1
                 self.rect = self.rect.move(self.vx * (50 // abs(self.vx)), 0)
             else:
                 self.rect = self.rect.move(-self.vx * (50 // abs(self.vx)), 0)
         else:
-            self.rect = self.rect.move(self.vx * -(10 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
+            self.rect = self.rect.move(self.vx * -(5 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.tiles_group):
                 self.vy *= -1
                 self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))

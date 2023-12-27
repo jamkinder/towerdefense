@@ -42,7 +42,7 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
-                                    tiles_group, visual.castle_group, 1, visual.load_image('mar.png'))
+                                    tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
         # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
@@ -79,17 +79,22 @@ while running:
         if event.type == pygame.QUIT:  # при закрытии окна
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
-            x, y = event.pos
-            if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0 and event.button == 1:
-                visual.clicked = visual.can_place_turr = False
-                const.MONEY -= const.BUY_COST
+            visual.button_sprites.update()
 
+            x, y = event.pos
+            if create_turret(x, y) and visual.product and money - const.BUY_COST >= 0 and event.button == 1:
+                visual.button_sprites = pygame.sprite.Group()
+                visual.Button(0, 0, visual.shop_image, 1, 'shop')
+
+                const.MONEY -= const.BUY_COST
                 # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
-                                      'usual')
+                                      visual.product)
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
+
+                visual.product = None
             else:
                 selected_turret = select_turret(x, y)
                 if event.button == 3 and selected_turret:
@@ -115,21 +120,20 @@ while running:
     turret_group.update(enemy_group, screen)
 
     # обновление экрана
-    visual.shop_btn.draw()
     if visual.clicked:
-        visual.buytowerbutton_blue.draw()
-        visual.buytowerbutton_red.draw()
-        visual.exit_btn.draw()
+        screen.blit(visual.shop_menu_image, (0, 0))
         iteration = 0
         for turret in const.TURRER:
             screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)),
                         (15, 60 + 60 * iteration))
             iteration += 1
-    if visual.can_place_turr:
+
+    if visual.product:
         mouse_pos = pygame.mouse.get_pos()
-        screen.blit(visual.load_image('blue_turret/archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
+        screen.blit(visual.load_image(const.TURRER[visual.product][0].get('im'), transforms=(50, 50)),
                     (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
-        visual.cancelbutton.draw()
+
+    visual.button_sprites.draw(screen)
 
     visual.img = visual.font.render(str(money), True, (255, 215, 0))
     visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
