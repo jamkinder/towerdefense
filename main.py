@@ -41,9 +41,9 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-
-        enemy = enemycontrols.Enemy(360,i,visual.load_image("enemies\S_Walk.png", transforms=(320, 50)),6,1, tiles_group, visual.castle_group, 1,visual.load_image('mar.png'))
-        #enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
+        enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
+                                    tiles_group, visual.castle_group, 1, visual.load_image('mar.png'))
+        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
@@ -117,13 +117,17 @@ while running:
     # обновление экрана
     visual.shop_btn.draw()
     if visual.clicked:
-        visual.buytowerbutton.draw()
+        visual.buytowerbutton_blue.draw()
+        visual.buytowerbutton_red.draw()
         visual.exit_btn.draw()
+        iteration = 0
         for turret in const.TURRER:
-            screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)), (15, 60))
+            screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)),
+                        (15, 60 + 60 * iteration))
+            iteration += 1
     if visual.can_place_turr:
         mouse_pos = pygame.mouse.get_pos()
-        screen.blit(visual.load_image('archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
+        screen.blit(visual.load_image('blue_turret/archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
                     (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
         visual.cancelbutton.draw()
 

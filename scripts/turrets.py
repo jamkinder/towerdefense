@@ -26,7 +26,7 @@ class Turret(pygame.sprite.Sprite):
 
         self.missile_group = pygame.sprite.Group()
 
-        self.update_time = pygame.time.get_ticks()
+        self.update_time = self.cooldown
 
         # создание визуального радиуса башни
         self.range_image = self.range_rect = None

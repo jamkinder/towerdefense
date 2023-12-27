@@ -5,7 +5,7 @@ from scripts import constants as const
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, sheet, columns, rows,tiles_group, castle_group,lvl,movingimage):
+    def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, movingimage):
         self.font = pygame.font.SysFont(None, 24)
         self.healt_img = self.font.render('', True, 'BLUE')
 
@@ -30,7 +30,6 @@ class Enemy(pygame.sprite.Sprite):
         self.trajectory = 0  # если trajectory кратна 2, то движемся по y, наоборот x
 
     def cut_sheet(self, sheet, columns, rows):
-        print('bruh')
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -40,7 +39,6 @@ class Enemy(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self):
-
 
         if self.healt <= 0:
             const.MONEY += const.KILL_REWARD

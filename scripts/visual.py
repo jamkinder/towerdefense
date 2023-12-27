@@ -22,7 +22,6 @@ screen.blit(img, (50, 50))
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
 
-
 font_time = pygame.font.SysFont(None, 20)
 
 
@@ -53,6 +52,8 @@ buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png', transforms=(tile_width, tile_height))
 cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+
 def load_level(filename):
     filename = "data/maps/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -74,8 +75,7 @@ tile_images = {
     'gun': load_image('gunplace.png', transforms=(tile_width, tile_height)),
     'castle': load_image('newcastle.png', transforms=(tile_width, tile_height)),
     'grasshor': load_image('grasshor.png', transforms=(tile_width, tile_height)),
-    'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height)),
-    'turret': load_image('archer_level_1.png', transforms=(tile_width, tile_height))
+    'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height))
 }
 
 
@@ -128,7 +128,7 @@ class Button:  # класс кнопок
         shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 4))
         width = shop_menu_image.get_width()
         height = shop_menu_image.get_height()
-        self.image2 = pygame.transform.scale(shop_menu_image, (int(width * 1), int(height * 1)))
+        self.image2 = pygame.transform.scale(shop_menu_image, (int(width * 1), int(height * 1.3)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         global clicked
@@ -143,7 +143,6 @@ class Button:  # класс кнопок
                 if pygame.mouse.get_pressed()[0] == 1 and not clicked:
                     clicked = True
                     self.clicked = True
-                    screen.blit(self.image2, (self.rect.x, self.rect.y))
             # if pygame.mouse.get_pressed()[0] == 0:
             #     self.clicked = False
             if clicked:
@@ -219,6 +218,7 @@ castle_group.add(castle)
 
 
 shop_btn = Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
-exit_btn = Button(83, 145, exit_image, 1, 'exit')
-buytowerbutton = Button(83, 60, buy_tower_image, 1, 'buy')
+exit_btn = Button(83, 205, exit_image, 1, 'exit')
+buytowerbutton_blue = Button(83, 60, buy_tower_image, 1, 'buy')
+buytowerbutton_red = Button(83, 120, buy_tower_image, 1, 'buy')
 cancelbutton = Button(0, HEIGHT - 50, cancel_image, 1, 'cancel')
