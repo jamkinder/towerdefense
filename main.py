@@ -10,6 +10,7 @@ totalwave = 0
 time_the_next_wave = -1
 pluscoof = 20
 
+
 def create_turret(x, y):
     # определяем, можно ли там поставить турель
     if visual.load_level('map.txt')[y // const.TILE_SIZE][x // const.TILE_SIZE] == 'p':
@@ -40,7 +41,9 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
+
+        enemy = enemycontrols.Enemy(360,i,visual.load_image("enemies\S_Walk.png", transforms=(320, 50)),6,1, tiles_group, visual.castle_group, 1,visual.load_image('mar.png'))
+        #enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
@@ -78,7 +81,9 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
             if create_turret(x, y) and visual.can_place_turr and (money - const.BUY_COST) >= 0 and event.button == 1:
+                visual.clicked = visual.can_place_turr = False
                 const.MONEY -= const.BUY_COST
+
                 # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
@@ -114,10 +119,15 @@ while running:
     if visual.clicked:
         visual.buytowerbutton.draw()
         visual.exit_btn.draw()
+        for turret in const.TURRER:
+            screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)), (15, 60))
     if visual.can_place_turr:
+        mouse_pos = pygame.mouse.get_pos()
+        screen.blit(visual.load_image('archer_level_1.png', transforms=(const.TILE_SIZE, const.TILE_SIZE)),
+                    (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
         visual.cancelbutton.draw()
 
-    visual.img = visual.font.render(str(money), True, 'gray')
+    visual.img = visual.font.render(str(money), True, (255, 215, 0))
     visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
     visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
 

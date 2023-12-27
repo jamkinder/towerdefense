@@ -22,6 +22,7 @@ screen.blit(img, (50, 50))
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
 
+
 font_time = pygame.font.SysFont(None, 20)
 
 
@@ -52,8 +53,6 @@ buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png', transforms=(tile_width, tile_height))
 cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
-
-
 def load_level(filename):
     filename = "data/maps/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -221,5 +220,5 @@ castle_group.add(castle)
 
 shop_btn = Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 exit_btn = Button(83, 145, exit_image, 1, 'exit')
-buytowerbutton = Button(10, 60, buy_tower_image, 1, 'buy')
+buytowerbutton = Button(83, 60, buy_tower_image, 1, 'buy')
 cancelbutton = Button(0, HEIGHT - 50, cancel_image, 1, 'cancel')

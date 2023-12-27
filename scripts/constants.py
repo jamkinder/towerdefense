@@ -4,7 +4,7 @@ TILE_SIZE = 50
 SIDE_PANEL = 300
 SCREEN_WIDTH = TILE_SIZE * COLS
 SCREEN_HEIGHT = TILE_SIZE * ROWS
-FPS = 60
+FPS = 30
 HEALTH = 100
 MONEY = 500
 TOTAL_LEVELS = 15
@@ -52,17 +52,17 @@ TURRER = {'usual': [
     {
         # 4 level
         'im': 'archer_level_4.png',
-        'damage': 20,
-        "range": 130,
-        "cooldown": 300,
+        'damage': 65,
+        "range": 210,
+        "cooldown": 600,
         'cost': 600
     },
     {
         # 5 level
         'im': 'archer_level_5.png',
-        'damage': 40,
-        "range": 140,
-        "cooldown": 250,
+        'damage': 70,
+        "range": 210,
+        "cooldown": 300,
         'cost': 800
     }]
 }
