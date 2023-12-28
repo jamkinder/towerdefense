@@ -61,7 +61,7 @@ TURRER = {'usual': [
     {
         # 5 level
         'im': 'blue_turret/archer_level_5.png',
-        'damage': 70,
+            'damage': 70,
         "range": 180,
         "cooldown": 600,
         'cost': 800
@@ -113,7 +113,7 @@ TURRER = {'usual': [
             # 1 level
             'im': 'red_turret/archer_level_1_red.png',
             'damage': 100,
-            "range": 120,
+            "range": 100,
             "cooldown": 7000,
             'cost': 600,
             'buy_cost': 400
@@ -122,7 +122,7 @@ TURRER = {'usual': [
             # 2 level
             'im': 'red_turret/archer_level_2_red.png',
             'damage': 150,
-            "range": 140,
+            "range": 120,
             "cooldown": 6000,
             'cost': 800
         },
@@ -130,7 +130,7 @@ TURRER = {'usual': [
             # 3 level
             'im': 'red_turret/archer_level_3_red.png',
             'damage': 200,
-            "range": 160,
+            "range": 140,
             "cooldown": 5000,
             'cost': 1000
         },
@@ -138,7 +138,7 @@ TURRER = {'usual': [
             # 4 level
             'im': 'red_turret/archer_level_4_red.png',
             'damage': 250,
-            "range": 180,
+            "range": 160,
             "cooldown": 4000,
             'cost': 1250
         },
