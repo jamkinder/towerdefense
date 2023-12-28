@@ -66,7 +66,7 @@ TURRER = {'usual': [
         "cooldown": 600,
         'cost': 800
     }],
-    'green': [
+    'green': [  # башня с большой скоростью
         {
             # 1 level
             'im': 'green_turret/archer_level_1_green.png',
@@ -108,7 +108,7 @@ TURRER = {'usual': [
             "cooldown": 200,
             'cost': 800
         }],
-    'red': [
+    'red': [   # башня с большим уроном
         {
             # 1 level
             'im': 'red_turret/archer_level_1_red.png',
@@ -150,30 +150,26 @@ TURRER = {'usual': [
             "cooldown": 3000,
             'cost': 1500
         }],
-    'slowing': [
+    'slowing': [  # башня, которая поглашает врагов
         {
             # 1 level
             'im': 'slowing_turret/archer_level_1_black.png',
-            'damage': 20,
-            "range": 150,
-            "cooldown": 1000,
+            'damage': 100 ** 100,
+            "range": 75,
+            "cooldown": 20000,
             'cost': 100,
             'buy_cost': 500
         },
         {
             # 2 level
             'im': 'slowing_turret/archer_level_2_black.png',
-            'damage': 40,
-            "range": 170,
-            "cooldown": 800,
+            "cooldown": 15000,
             'cost': 250
         },
         {
             # 3 level
             'im': 'slowing_turret/archer_level_3_black.png',
-            'damage': 60,
-            "range": 200,
-            "cooldown": 900,
+            "cooldown": 10000,
             'cost': 400
         }]
 }

@@ -48,6 +48,10 @@ class Enemy(pygame.sprite.Sprite):
         if self.healt <= 0:
             const.MONEY += const.KILL_REWARD
             self.kill()
+        else:
+            # показываем здоровье врагов
+            self.healt_img = self.font.render(str(self.healt), True, 'red')
+            visual.screen.blit(self.healt_img, (self.rect.x + 5, self.rect.y - 10))
 
         if self.trajectory % 2 == 0:
             self.rect = self.rect.move(0, self.vy)
@@ -62,9 +66,6 @@ class Enemy(pygame.sprite.Sprite):
 
         if pygame.sprite.spritecollideany(self, self.tiles_group):
             self.rotate()
-        # показываем здоровье врагов
-        self.healt_img = self.font.render(str(self.healt), True, 'red')
-        visual.screen.blit(self.healt_img, (self.rect.x + 5, self.rect.y - 10))
 
     def rotate(self):
         if self.trajectory % 2 == 0:

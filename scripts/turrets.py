@@ -41,7 +41,9 @@ class Turret(pygame.sprite.Sprite):
             if self.target:  # если враг находится в диапазоне
                 # воспроизводим анимацию атаки и создаём снаряд
                 self.update_time = pygame.time.get_ticks()
-                self.missile_group.add(self.attack())
+                missil = self.attack()
+                if missil:
+                    self.missile_group.add(missil)
         self.missile_group.draw(surface)
         self.missile_group.update()
 
@@ -72,12 +74,17 @@ class Turret(pygame.sprite.Sprite):
 
     def attack(self):
         # создаёт снаряд
-        missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
-                                 (self.rect.x, self.rect.y), self.damage)
+        if self.name_turret != 'slowing':
+            missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
+                                     (self.rect.x, self.rect.y), self.damage)
+        else:
+            missil = missile.Missile(
+                visual.load_image('Daco.png', colorkey=-1, transforms=(const.TILE_SIZE // 2, const.TILE_SIZE // 2)),
+                                  self.target, (self.rect.x, self.rect.y), self.damage)
         return missil
 
     def upgrade(self):
-        if self.upgrade_level != 5:
+        if self.upgrade_level != 5 and self.name_turret != 'slowing':
             if const.MONEY >= self.cost_upgrade:
                 const.MONEY -= self.cost_upgrade
                 self.upgrade_level += 1
@@ -89,3 +96,12 @@ class Turret(pygame.sprite.Sprite):
                 self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
 
                 self.radius()
+        elif self.upgrade_level != 3 and self.name_turret == 'slowing':
+            if const.MONEY >= self.cost_upgrade:
+                const.MONEY -= self.cost_upgrade
+                self.upgrade_level += 1
+
+                self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
+                self.cooldown = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cooldown")
+                self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
+                                               transforms=(const.TILE_SIZE, const.TILE_SIZE))
