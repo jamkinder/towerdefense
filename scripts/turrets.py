@@ -35,10 +35,10 @@ class Turret(pygame.sprite.Sprite):
         self.selected = False
 
     def update(self, enemy_group, surface):
-        self.target = self.pick_target(enemy_group)
-        if self.target:  # если враг находится в диапазоне
-            # если прошло достаточно времени с предыдущего выстрела
-            if pygame.time.get_ticks() - self.update_time > self.cooldown:
+        # если прошло достаточно времени с предыдущего выстрела
+        if pygame.time.get_ticks() - self.update_time > self.cooldown:
+            self.target = self.pick_target(enemy_group)
+            if self.target:  # если враг находится в диапазоне
                 # воспроизводим анимацию атаки и создаём снаряд
                 self.update_time = pygame.time.get_ticks()
                 self.missile_group.add(self.attack())
@@ -68,8 +68,7 @@ class Turret(pygame.sprite.Sprite):
             dist = sqrt(x_dist ** 2 + y_dist ** 2)
             if dist < self.range and enemy.rect.y > 0:
                 return enemy
-            else:
-                return None
+        return None
 
     def attack(self):
         # создаёт снаряд
