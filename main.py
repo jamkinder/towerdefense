@@ -8,7 +8,7 @@ from scripts import enemyspawnerData as enemydata
 money = const.MONEY
 totalwave = 0
 time_the_next_wave = -1
-pluscoof = 20
+pluscoof = 20  # -
 
 
 def create_turret(x, y):
