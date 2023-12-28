@@ -13,18 +13,22 @@ screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
+place_group = pygame.sprite.Group()
 button_sprites = pygame.sprite.Group()
 
 tile_width = tile_height = const.TILE_SIZE
+
 clicked = False
 can_place_turr = None
+
 font = pygame.font.SysFont(None, 44)
+font_time = pygame.font.SysFont(None, 20)
+
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
 
-font_time = pygame.font.SysFont(None, 20)
 
 product = None
 
@@ -52,7 +56,7 @@ def load_image(name, colorkey=None, transforms=None):
 
 # подгрузка картинок кнопок
 shop_image = load_image('shopbutton.png', transforms=(tile_width * 1.7, tile_height))
-buy_tower_image = load_image('buy.png', transforms=(tile_width * 1.7, tile_height))
+buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png', transforms=(tile_width, tile_height))
 cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
@@ -87,24 +91,22 @@ class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y, *groups):
         super().__init__(*groups)
         self.image = tile_images[tile_type]
-
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
 
 
 def generate_level(level):
-    x, y = None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':  # вид грязи
                 Tile('empty', x, y, all_sprites)
             elif level[y][x] == 't':  # turret - башня
-                Tile('gun', x, y, tiles_group, all_sprites)
+                Tile('gun', x, y, place_group, all_sprites)
                 turret = turrets.Turret(tile_width * x, tile_height * y, 'usual')
                 turrets_group.add(turret)
                 all_sprites.add(turret)
             elif level[y][x] == 'p':  # place - свободное место под башню
-                Tile('gun', x, y, tiles_group, all_sprites)
+                Tile('gun', x, y, place_group)
             elif level[y][x] == '#':  # лес
                 Tile('wall', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'c':  # castle - замок
@@ -116,14 +118,14 @@ def generate_level(level):
             elif level[y][x] == ',':  # вид грязи
                 Tile('grassfull', x, y, all_sprites)
     # вернем игрока, а также размер поля в клетках
-    return all_sprites, tiles_group, turrets_group
+    return all_sprites, tiles_group, turrets_group, place_group
 
 
 def generate_visual():
     return generate_level(load_level('map.txt'))
 
 
-shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 7.2))
+shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
 
 
 class Button(pygame.sprite.Sprite):  # класс кнопок
@@ -145,7 +147,7 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 product = self.product
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
-                Button(83, tile_height * 7.2 - 59, exit_image, 1, 'exit')
+                Button(83, tile_height * 8.35 - 58, exit_image, 1, 'exit')
                 clicked = True
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
