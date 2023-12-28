@@ -123,7 +123,7 @@ def generate_visual():
     return generate_level(load_level('map.txt'))
 
 
-shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 5.2))
+shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 7.2))
 
 
 class Button(pygame.sprite.Sprite):  # класс кнопок
@@ -145,9 +145,7 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 product = self.product
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
-                Button(83, 205, exit_image, 1, 'exit')
-                Button(83, 60, buy_tower_image, 1, 'buy', products='usual')
-                Button(83, 120, buy_tower_image, 1, 'buy', products='red')
+                Button(83, tile_height * 7.2 - 59, exit_image, 1, 'exit')
                 clicked = True
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина

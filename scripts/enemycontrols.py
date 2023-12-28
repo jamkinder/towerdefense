@@ -11,20 +11,27 @@ class Enemy(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self)
         self.frames = []
+
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
+
         self.image = self.frames[self.cur_frame]
         self.rect = rect
         self.rect.x = x
         self.rect.y = y
+
         self.castle = castle_group
         self.tiles_group = tiles_group
 
         self.upgrade_level = lvl
+
         self.healt = spawner.DATA[self.upgrade_level - 1].get("health")
         speed = spawner.DATA[self.upgrade_level - 1].get("speed")
         self.damage = spawner.DATA[self.upgrade_level - 1].get('damage')
+
         self.vx, self.vy = -speed, speed
+
+        self.update_time = pygame.time.get_ticks()
 
         self.trajectory = 0  # если trajectory кратна 2, то движемся по y, наоборот x
 
@@ -38,7 +45,6 @@ class Enemy(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self):
-
         if self.healt <= 0:
             const.MONEY += const.KILL_REWARD
             self.kill()
@@ -47,8 +53,12 @@ class Enemy(pygame.sprite.Sprite):
             self.rect = self.rect.move(0, self.vy)
         else:
             self.rect = self.rect.move(self.vx, 0)
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
+
+        if pygame.time.get_ticks() - self.update_time > const.ANIM_ENEMY // abs(self.vx):
+            self.update_time = pygame.time.get_ticks()
+
+            self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+            self.image = self.frames[self.cur_frame]
 
         if pygame.sprite.spritecollideany(self, self.tiles_group):
             self.rotate()

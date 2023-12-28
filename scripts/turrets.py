@@ -26,7 +26,7 @@ class Turret(pygame.sprite.Sprite):
 
         self.missile_group = pygame.sprite.Group()
 
-        self.update_time = self.cooldown
+        self.update_time = -self.cooldown
 
         # создание визуального радиуса башни
         self.range_image = self.range_rect = None
@@ -40,6 +40,7 @@ class Turret(pygame.sprite.Sprite):
             # если прошло достаточно времени с предыдущего выстрела
             if pygame.time.get_ticks() - self.update_time > self.cooldown:
                 # воспроизводим анимацию атаки и создаём снаряд
+                self.update_time = pygame.time.get_ticks()
                 self.missile_group.add(self.attack())
         self.missile_group.draw(surface)
         self.missile_group.update()
@@ -72,7 +73,6 @@ class Turret(pygame.sprite.Sprite):
 
     def attack(self):
         # создаёт снаряд
-        self.update_time = pygame.time.get_ticks()
         missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
                                  (self.rect.x, self.rect.y), self.damage)
         return missil

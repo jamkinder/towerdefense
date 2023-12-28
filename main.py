@@ -82,11 +82,12 @@ while running:
             visual.button_sprites.update()
 
             x, y = event.pos
-            if create_turret(x, y) and visual.product and money - const.BUY_COST >= 0 and event.button == 1:
+            if create_turret(x, y) and visual.product and money - const.TURRER[visual.product][0].get(
+                    'buy_cost') >= 0 and event.button == 1:
                 visual.button_sprites = pygame.sprite.Group()
                 visual.Button(0, 0, visual.shop_image, 1, 'shop')
 
-                const.MONEY -= const.BUY_COST
+                const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
                 # ровно ставим турель
                 new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                       y // const.TILE_SIZE * const.TILE_SIZE,
@@ -100,6 +101,9 @@ while running:
                 if event.button == 3 and selected_turret:
                     selected_turret.upgrade()
                     selected_turret = None
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                const.MONEY += 1000
 
     # отрисовка и изменение свойств объектов
     screen.fill('Black')
@@ -126,6 +130,7 @@ while running:
         for turret in const.TURRER:
             screen.blit(visual.load_image(const.TURRER[turret][0].get('im'), transforms=(50, 50)),
                         (15, 60 + 60 * iteration))
+            visual.Button(83, 60 + 60 * iteration, visual.buy_tower_image, 1, 'buy', products=turret)
             iteration += 1
 
     if visual.product:
