@@ -13,17 +13,20 @@ screen = pygame.display.set_mode(size)
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
+button_sprites = pygame.sprite.Group()
+
 tile_width = tile_height = const.TILE_SIZE
 clicked = False
-can_place_turr = False
+can_place_turr = None
 font = pygame.font.SysFont(None, 44)
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
 
-
 font_time = pygame.font.SysFont(None, 20)
+
+product = None
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -53,6 +56,8 @@ buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png', transforms=(tile_width, tile_height))
 cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+
 def load_level(filename):
     filename = "data/maps/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -74,8 +79,7 @@ tile_images = {
     'gun': load_image('gunplace.png', transforms=(tile_width, tile_height)),
     'castle': load_image('newcastle.png', transforms=(tile_width, tile_height)),
     'grasshor': load_image('grasshor.png', transforms=(tile_width, tile_height)),
-    'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height)),
-    'turret': load_image('archer_level_1.png', transforms=(tile_width, tile_height))
+    'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height))
 }
 
 
@@ -119,59 +123,42 @@ def generate_visual():
     return generate_level(load_level('map.txt'))
 
 
-class Button:  # класс кнопок
-    def __init__(self, x, y, image, scale, type):
-        self._type = type
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
-        shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 4))
-        width = shop_menu_image.get_width()
-        height = shop_menu_image.get_height()
-        self.image2 = pygame.transform.scale(shop_menu_image, (int(width * 1), int(height * 1)))
+shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5, tile_height * 7.2))
+
+
+class Button(pygame.sprite.Sprite):  # класс кнопок
+    def __init__(self, x, y, image, scale, _type, products=None):
+        super().__init__(button_sprites)
+        self._type = _type
+
+        self.image = pygame.transform.scale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        global clicked
-        self.clicked = clicked
 
-    def draw(self):  # отрисовываем кнопки и выполняем их действия
-        global clicked
+        self.product = products
+
+    def update(self):  # отрисовываем кнопки и выполняем их действия
+        global button_sprites, clicked, product
         pos = pygame.mouse.get_pos()
-        if self._type == 'shop':  # кнопка открытия меню магазина
-            if self.rect.collidepoint(pos):
-                self.clicked = clicked
-                if pygame.mouse.get_pressed()[0] == 1 and not clicked:
-                    clicked = True
-                    self.clicked = True
-                    screen.blit(self.image2, (self.rect.x, self.rect.y))
-            # if pygame.mouse.get_pressed()[0] == 0:
-            #     self.clicked = False
-            if clicked:
-                screen.blit(self.image2, (self.rect.x, self.rect.y))
-        elif self._type == 'exit':  # кнопка закрытия меню магазина
-            if self.rect.collidepoint(pos):
-                self.clicked = clicked
-                if pygame.mouse.get_pressed()[0] == 1 and clicked:
-                    clicked = False
-                    self.clicked = clicked
-                    screen.blit(self.image2, (0, 0))
-        elif self._type == 'buy':  # кнопка разрешает строительство башен и закрывает меню магазина
-            if self.rect.collidepoint(pos):
-                self.clicked = clicked
-                if pygame.mouse.get_pressed()[0] == 1 and clicked:
-                    clicked = False
-                    self.clicked = clicked
-                    screen.blit(self.image2, (0, 0))
-                    global can_place_turr
-                    can_place_turr = True
-        elif self._type == 'cancel':
-            if self.rect.collidepoint(pos):
-                self.clicked = clicked
-                if pygame.mouse.get_pressed()[0] == 1 and not clicked:
-                    clicked = False
-                    self.clicked = clicked
-                    can_place_turr = False
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        if self.rect.collidepoint(pos):
+            if self._type == 'shop':
+                product = self.product
+                button_sprites = pygame.sprite.Group()
+                # кнопка открытия меню магазина
+                Button(83, tile_height * 7.2 - 59, exit_image, 1, 'exit')
+                clicked = True
+
+            elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
+                button_sprites = pygame.sprite.Group()
+                Button(0, 0, shop_image, 1, 'shop')
+                clicked = False
+                product = None
+
+            elif self._type == 'buy':
+                button_sprites = pygame.sprite.Group()
+                Button(0, 0, cancel_image, 1, 'cancel')
+                product = self.product
+                clicked = False
 
 
 class Castle(pygame.sprite.Sprite):
@@ -192,12 +179,7 @@ class Castle(pygame.sprite.Sprite):
 
 
 # группы спрайтов
-vertical_borders = pygame.sprite.Group()
-all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-player_group = pygame.sprite.Group()
 castle_group = pygame.sprite.Group()
-horizontal_borders = pygame.sprite.Group()
 castle = Castle()
 castle_group.add(castle)
 
@@ -218,7 +200,4 @@ castle_group.add(castle)
 #         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-shop_btn = Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
-exit_btn = Button(83, 145, exit_image, 1, 'exit')
-buytowerbutton = Button(83, 60, buy_tower_image, 1, 'buy')
-cancelbutton = Button(0, HEIGHT - 50, cancel_image, 1, 'cancel')
+Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
