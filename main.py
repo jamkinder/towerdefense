@@ -182,7 +182,7 @@ while running:
     visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
 
     visual.screen.blit(visual.img, (100, 15))
-    visual.screen.blit(visual.imgcastle, (460, 425))
+    visual.screen.blit(visual.imgcastle, (460, 375))
     visual.screen.blit(visual.wavetext, (WIDTH // 2.5, 10))
 
     # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
