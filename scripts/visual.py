@@ -23,6 +23,7 @@ can_place_turr = None
 
 font = pygame.font.SysFont(None, 44)
 font_time = pygame.font.SysFont(None, 20)
+fon_wave = pygame.font.SysFont(None, 35)
 
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
