@@ -56,7 +56,7 @@ def load_image(name, colorkey=None, transforms=None):
 
 # подгрузка картинок кнопок
 shop_image = load_image('shopbutton.png', transforms=(tile_width * 1.7, tile_height))
-buy_tower_image = load_image('buy.png', transforms=(tile_width * 1.7, tile_height))
+buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
 player_image = load_image('player.png', transforms=(tile_width, tile_height))
 cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
