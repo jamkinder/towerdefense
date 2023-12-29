@@ -18,6 +18,9 @@ class Turret(pygame.sprite.Sprite):
         self.damage = const.TURRER[self.name_turret][self.upgrade_level - 1].get("damage")
         self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
 
+        self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                     pygame.Color((0, 0, 0)))
+
         self.target = None
 
         self.rect = self.image.get_rect()
@@ -51,6 +54,10 @@ class Turret(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         if self.selected:
             screen.blit(self.range_image, self.range_rect)
+            if self.name_turret != 'slowing' and self.upgrade_level != 5:
+                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
+            elif self.name_turret == 'slowing' and self.upgrade_level != 3:
+                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
 
     def radius(self):
         # создание визуального радиуса башни
@@ -80,7 +87,7 @@ class Turret(pygame.sprite.Sprite):
         else:
             missil = missile.Missile(
                 visual.load_image('Daco.png', colorkey=-1, transforms=(const.TILE_SIZE // 2, const.TILE_SIZE // 2)),
-                                  self.target, (self.rect.x, self.rect.y), self.damage)
+                self.target, (self.rect.x, self.rect.y), self.damage)
         return missil
 
     def upgrade(self):
@@ -105,3 +112,7 @@ class Turret(pygame.sprite.Sprite):
                 self.cooldown = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cooldown")
                 self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                                transforms=(const.TILE_SIZE, const.TILE_SIZE))
+                self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                             pygame.Color((255, 0, 0)))
+        self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                     pygame.Color((0, 0, 0)))

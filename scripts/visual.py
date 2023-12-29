@@ -3,7 +3,6 @@ import sys
 import os
 from scripts import constants as const
 from scripts import turrets
-import time
 
 pygame.init()
 size = WIDTH, HEIGHT = 500, 500
@@ -22,15 +21,15 @@ tile_width = tile_height = const.TILE_SIZE
 clicked = False
 can_place_turr = None
 
-font = pygame.font.SysFont(None, 44)
-font_time = pygame.font.SysFont(None, 20)
-fon_wave = pygame.font.SysFont(None, 35)
+font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 35)
+font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
+font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_lose_screen = pygame.font.Font(None, 30)
 
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
 imgcastle = font.render('', True, 'RED')
 wavetext = font.render('', True, 'RED')
-
 
 product = None
 
@@ -87,15 +86,15 @@ tile_images = {
     'grasshor': load_image('grasshor.png', transforms=(tile_width, tile_height)),
     'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height))
 }
+
+
 def terminate():
     pygame.quit()
     sys.exit()
 
 
-
 def start_screen():
-
-    intro_text = ["                  Press any button to start game"]
+    intro_text = [16 * ' ' + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('logo.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
@@ -119,6 +118,28 @@ def start_screen():
                 return  # начинаем игру
         pygame.display.flip()
         clock.tick(FPS)
+
+
+def lose_screen():
+    intro_text = [16 * ' ' + "You are dead"]
+
+    screen.blit(fon_lose, (0, 0))
+    text_coord = 450
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        pygame.display.flip()
+
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y, *groups):
@@ -160,6 +181,7 @@ def generate_visual():
 
 
 shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
+fon_lose = pygame.transform.scale(load_image('losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 
 
 class Button(pygame.sprite.Sprite):  # класс кнопок
@@ -181,7 +203,7 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 product = self.product
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
-                Button(83, tile_height * 8.35 - 58, exit_image, 1, 'exit')
+                Button(tile_width * 3.5 + 13, tile_height * 8.35 - 58, exit_image, 1, 'exit')
                 clicked = True
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
@@ -211,8 +233,7 @@ class Castle(pygame.sprite.Sprite):
     def take_damage(self, damage):
         self.hp -= damage
         if self.hp <= 0:
-            loosescreen.start_screen()
-
+            lose_screen()
 
     def show(self):
         pass

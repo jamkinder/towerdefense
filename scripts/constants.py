@@ -175,3 +175,8 @@ TURRER = {'usual': [
     'axe': [{'im': 'axe.png',
              'buy_cost': 100}]
 }
+
+HINTS = ['hints/shop/firstlevel/defaulttower.png',
+         'hints/shop/firstlevel/green1tower.png',
+         'hints/shop/firstlevel/redtower1.png',
+         'hints/shop/firstlevel/blacktower1.png']

@@ -9,6 +9,6 @@ DATA = [{"health": 100,
          'damage': 1},
         {'health': 600,
          'speed': 2.5,
-         'damage': 1.5}]
+         'damage': 2}]
 
 enemyesalive = 0
