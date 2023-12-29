@@ -10,7 +10,7 @@ class Turret(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.name_turret = name_turret
 
-        self.upgrade_level = self.cost_upgrade = 1
+        self.upgrade_level = 1
         self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                        transforms=(const.TILE_SIZE, const.TILE_SIZE))
         self.range = const.TURRER[self.name_turret][self.upgrade_level - 1].get("range")

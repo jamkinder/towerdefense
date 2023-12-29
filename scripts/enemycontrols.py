@@ -1,13 +1,12 @@
 import pygame
 from scripts import visual
-from scripts import enemyspawnerData as spawner
+from scripts import enemyspawnerData
 from scripts import constants as const
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, rect):
-        self.font = pygame.font.SysFont(None, 24)
-        self.healt_img = self.font.render('', True, 'BLUE')
+        self.healt_img = visual.font_healt_enemy.render('', True, 'BLUE')
 
         pygame.sprite.Sprite.__init__(self)
         self.frames = []
@@ -25,9 +24,9 @@ class Enemy(pygame.sprite.Sprite):
 
         self.upgrade_level = lvl
 
-        self.healt = spawner.DATA[self.upgrade_level - 1].get("health")
-        speed = spawner.DATA[self.upgrade_level - 1].get("speed")
-        self.damage = spawner.DATA[self.upgrade_level - 1].get('damage')
+        self.healt = enemyspawnerData.DATA[self.upgrade_level - 1].get("health")
+        speed = enemyspawnerData.DATA[self.upgrade_level - 1].get("speed")
+        self.damage = enemyspawnerData.DATA[self.upgrade_level - 1].get('damage')
 
         self.vx, self.vy = -speed, speed
 
@@ -50,7 +49,7 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
         else:
             # показываем здоровье врагов
-            self.healt_img = self.font.render(str(self.healt), True, 'red')
+            self.healt_img = visual.font_healt_enemy.render(str(self.healt), True, 'red')
             visual.screen.blit(self.healt_img, (self.rect.x + 5, self.rect.y - 10))
 
         if self.trajectory % 2 == 0:

@@ -5,33 +5,7 @@ from scripts import constants as const
 from scripts import turrets
 
 pygame.init()
-size = WIDTH, HEIGHT = 500, 500
-screen = pygame.display.set_mode(size)
-clock = pygame.time.Clock()
-FPS = const.FPS
-# группы спрайтов
-all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-turrets_group = pygame.sprite.Group()
-place_group = pygame.sprite.Group()
-button_sprites = pygame.sprite.Group()
-
-tile_width = tile_height = const.TILE_SIZE
-
-clicked = False
-can_place_turr = None
-
-font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
-font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
-font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
-font_lose_screen = pygame.font.Font(None, 30)
-
-img = font.render('', True, 'BLUE')
-screen.blit(img, (50, 50))
-imgcastle = font.render('', True, 'RED')
-wavetext = font.render('', True, 'RED')
-
-product = None
+screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -55,13 +29,6 @@ def load_image(name, colorkey=None, transforms=None):
     return image
 
 
-# подгрузка картинок кнопок
-shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, tile_height))
-buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
-exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
-cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
-
-
 def load_level(filename):
     filename = "data/maps/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -74,67 +41,6 @@ def load_level(filename):
     # дополняем каждую строку пустыми клетками ('.')
     thislevel = list(map(lambda x: x.ljust(max_width, '.'), level_map))
     return thislevel
-
-
-tile_images = {
-    'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
-    'lake': load_image("block/lake.png", transforms=(tile_width, tile_height)),
-    'empty': load_image('block/grass.png', transforms=(tile_width, tile_height)),
-    'gun': load_image('block/gunplace.png', transforms=(tile_width, tile_height)),
-    'castle': load_image('block/newcastle.png', transforms=(tile_width, tile_height)),
-    'grasshor': load_image('block/grasshor.png', transforms=(tile_width, tile_height)),
-    'grassfull': load_image('block/grassfull.png', transforms=(tile_width, tile_height))
-}
-
-
-def terminate():
-    pygame.quit()
-    sys.exit()
-
-
-def start_screen():
-    intro_text = [16 * ' ' + "Press any button to start game"]
-
-    fon = pygame.transform.scale(load_image('fon/logo.png'), (WIDTH, HEIGHT))
-    screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 450
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
-        pygame.display.flip()
-        clock.tick(FPS)
-
-
-def lose_screen():
-    screen.blit(fon_lose, (0, 0))
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-        pygame.display.flip()
-
-
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, tile_type, pos_x, pos_y, *groups):
-        super().__init__(*groups)
-        self.image = tile_images[tile_type]
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
 
 
 def generate_level(level):
@@ -168,8 +74,12 @@ def generate_visual():
     return generate_level(load_level('map.txt'))
 
 
-shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
-fon_lose = pygame.transform.scale(load_image('fon/losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y, *groups):
+        super().__init__(*groups)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
 
 
 class Button(pygame.sprite.Sprite):  # класс кнопок
@@ -214,7 +124,7 @@ class Castle(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH - 50, HEIGHT - 75)
+        self.rect.center = (const.SCREEN_WIDTH - 50, const.SCREEN_HEIGHT - 75)
 
         self.pos = (440, 480)
 
@@ -227,10 +137,87 @@ class Castle(pygame.sprite.Sprite):
         pass
 
 
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
+def start_screen():
+    intro_text = [" " * 6 + "Press any button to start game"]
+
+    fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+    screen.blit(fon, (0, 0))
+    text_coord = 450
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return  # начинаем игру
+        pygame.display.flip()
+
+
+def lose_screen():
+    screen.blit(pygame.transform.scale(load_image('fon/losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT)),
+                (0, 0))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        pygame.display.flip()
+
+
 # группы спрайтов
+all_sprites = pygame.sprite.Group()
+tiles_group = pygame.sprite.Group()
+turrets_group = pygame.sprite.Group()
+place_group = pygame.sprite.Group()
+button_sprites = pygame.sprite.Group()
 castle_group = pygame.sprite.Group()
 castle = Castle()
 castle_group.add(castle)
+
+tile_width = tile_height = const.TILE_SIZE
+
+clicked = False
+can_place_turr = None
+
+font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
+font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
+font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_healt_enemy = pygame.font.Font(None, 24)
+font_lose_screen = pygame.font.Font(None, 30)
+
+# подгрузка картинок кнопок
+shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, tile_height))
+buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
+exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
+cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+tile_images = {
+    'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
+    'lake': load_image("block/lake.png", transforms=(tile_width, tile_height)),
+    'empty': load_image('block/grass.png', transforms=(tile_width, tile_height)),
+    'gun': load_image('block/gunplace.png', transforms=(tile_width, tile_height)),
+    'castle': load_image('block/newcastle.png', transforms=(tile_width, tile_height)),
+    'grasshor': load_image('block/grasshor.png', transforms=(tile_width, tile_height)),
+    'grassfull': load_image('block/grassfull.png', transforms=(tile_width, tile_height))
+}
+
+product = None
+
+shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
+Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
 # class Camera:
 #     # зададим начальный сдвиг камеры
@@ -248,5 +235,3 @@ castle_group.add(castle)
 #         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
 #         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
-
-Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
