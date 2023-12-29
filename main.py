@@ -4,7 +4,7 @@ from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
 from scripts import enemyspawnerData as enemydata
-
+from scripts import loosescreen
 money = const.MONEY
 totalwave = 0
 time_the_next_wave = -1
@@ -222,9 +222,9 @@ while running:
         else:
             time_the_next_wave = pygame.time.get_ticks()
 
-    # screen.blit(visual.load_image('defaulttower.png', transforms=(130, 70)), (170, 120))
-    # R
-
+    if loosescreen.restart:
+        pass
+        #нужно придумать как сделать рестарт игры
     pygame.display.flip()
     pygame.display.update()
 

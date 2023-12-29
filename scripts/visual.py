@@ -3,19 +3,21 @@ import sys
 import os
 from scripts import constants as const
 from scripts import turrets
+from scripts import loosescreen
 import time
 
 pygame.init()
 size = WIDTH, HEIGHT = 500, 500
 screen = pygame.display.set_mode(size)
-
+clock = pygame.time.Clock()
+FPS = const.FPS
 # группы спрайтов
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
 place_group = pygame.sprite.Group()
 button_sprites = pygame.sprite.Group()
-
+restart = False
 tile_width = tile_height = const.TILE_SIZE
 
 clicked = False
@@ -85,7 +87,38 @@ tile_images = {
     'grasshor': load_image('grasshor.png', transforms=(tile_width, tile_height)),
     'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height))
 }
+def terminate():
+    pygame.quit()
+    sys.exit()
 
+
+
+def start_screen():
+
+    intro_text = ["                  Press any button to start game"]
+
+    fon = pygame.transform.scale(load_image('logo.png'), (WIDTH, HEIGHT))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 450
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return  # начинаем игру
+        pygame.display.flip()
+        clock.tick(FPS)
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y, *groups):
@@ -122,6 +155,7 @@ def generate_level(level):
 
 
 def generate_visual():
+    start_screen()
     return generate_level(load_level('map.txt'))
 
 
@@ -165,16 +199,20 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
 
 class Castle(pygame.sprite.Sprite):
     def __init__(self):
+        self.hp = 10
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH - 50, HEIGHT - 25)
-        self.hp = 10
+
         self.pos = (440, 480)
 
     def take_damage(self, damage):
         self.hp -= damage
+        if self.hp <= 0:
+            loosescreen.start_screen()
+
 
     def show(self):
         pass
