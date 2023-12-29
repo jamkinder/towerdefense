@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 from scripts import constants as const
 
 
@@ -36,7 +37,13 @@ class Missile(pygame.sprite.Sprite):
                 (self.target.rect.y - self.pos[1] < 0 and self.target.rect.y - self.rect.y - self.rect[3] < 0))) or not (
                 (self.target.rect.x - self.pos[0] > 0 and self.target.rect.x - self.rect.x - self.rect[2] > 0) or (
                 (self.target.rect.x - self.pos[0] < 0 and self.target.rect.x - self.rect.x + self.rect[2] < 0))):
-            self.target.healt -= self.damage
+
+            cc = random.randint(0, 15)
+            crit = 0
+            if cc < 6:
+                crit = random.randint(5,20)
+            self.target.healt -= self.damage + crit
+
             self.kill()
 
     def rotate(self):  # поварачивает стрелу

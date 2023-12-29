@@ -47,9 +47,9 @@ def spawn_enemyes():  # функция спавна врагов
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
-    for i in range(0, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_walk_Blue.png", transforms=(320, 50)), 6, 1,
-                                    tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
+    for j in range(20, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
+        enemy = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
+                                    tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
         # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
@@ -203,16 +203,19 @@ while running:
 
                 if totalwave % 2 == 0:
                     enemydata.DATA[0].update({'health': enemydata.DATA[0].get('health') + pluscoof})
+                    enemydata.DATA[1].update({'health': enemydata.DATA[1].get('health') + pluscoof})
 
-                # if totalwave % 10 == 0:
-                #     enemy = enemycontrols.Enemy(360, 1, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)),
-                #                                 6, 1,
-                #                                 tiles_group, visual.castle_group, 3, visual.load_image('mar.png'))
-                #     enemy_group.add(enemy)
-                #     all_sprites.add(enemy)
-                #     enemydata.WAVES.update(
-                #         {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1,
-                #                   round(enemydata.WAVES.get(str(1))[1] * 0)]})
+                if totalwave % 10 == 0:
+                    enemy = enemycontrols.Enemy(360, 5, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)),
+                                                6, 1,
+                                                tiles_group, visual.castle_group, 3,
+                                                visual.load_image('mar.png').get_rect())
+                    # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
+                    enemy_group.add(enemy)
+                    all_sprites.add(enemy)
+                    enemydata.WAVES.update(
+                        {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1,
+                                  round(enemydata.WAVES.get(str(1))[1] * 0)]})
                 if totalwave % 15 == 0:
                     pluscoof *= 5
                 new_wave(totalwave)
