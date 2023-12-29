@@ -21,7 +21,7 @@ tile_width = tile_height = const.TILE_SIZE
 clicked = False
 can_place_turr = None
 
-font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 35)
+font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
 font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
 font_lose_screen = pygame.font.Font(None, 30)
@@ -56,11 +56,10 @@ def load_image(name, colorkey=None, transforms=None):
 
 
 # подгрузка картинок кнопок
-shop_image = load_image('shopbutton.png', transforms=(tile_width * 1.7, tile_height))
-buy_tower_image = load_image('buytower.png', transforms=(tile_width * 1.7, tile_height))
-exit_image = load_image('exit.png', transforms=(tile_width * 1.7, tile_height))
-player_image = load_image('player.png', transforms=(tile_width, tile_height))
-cancel_image = load_image('cancel.png', transforms=(tile_width * 1.5, tile_height))
+shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, tile_height))
+buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
+exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
+cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
 
 
 def load_level(filename):
@@ -78,13 +77,13 @@ def load_level(filename):
 
 
 tile_images = {
-    'wall': load_image('forest.png', transforms=(tile_width, tile_height)),
-    'lake': load_image("lake.png", transforms=(tile_width, tile_height)),
-    'empty': load_image('grass.png', transforms=(tile_width, tile_height)),
-    'gun': load_image('gunplace.png', transforms=(tile_width, tile_height)),
-    'castle': load_image('newcastle.png', transforms=(tile_width, tile_height)),
-    'grasshor': load_image('grasshor.png', transforms=(tile_width, tile_height)),
-    'grassfull': load_image('grassfull.png', transforms=(tile_width, tile_height))
+    'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
+    'lake': load_image("block/lake.png", transforms=(tile_width, tile_height)),
+    'empty': load_image('block/grass.png', transforms=(tile_width, tile_height)),
+    'gun': load_image('block/gunplace.png', transforms=(tile_width, tile_height)),
+    'castle': load_image('block/newcastle.png', transforms=(tile_width, tile_height)),
+    'grasshor': load_image('block/grasshor.png', transforms=(tile_width, tile_height)),
+    'grassfull': load_image('block/grassfull.png', transforms=(tile_width, tile_height))
 }
 
 
@@ -96,7 +95,7 @@ def terminate():
 def start_screen():
     intro_text = [16 * ' ' + "Press any button to start game"]
 
-    fon = pygame.transform.scale(load_image('logo.png'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('fon/logo.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 450
@@ -121,18 +120,7 @@ def start_screen():
 
 
 def lose_screen():
-    intro_text = [16 * ' ' + "You are dead"]
-
     screen.blit(fon_lose, (0, 0))
-    text_coord = 450
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
 
     while True:
         for event in pygame.event.get():
@@ -180,8 +168,8 @@ def generate_visual():
     return generate_level(load_level('map.txt'))
 
 
-shop_menu_image = load_image('shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
-fon_lose = pygame.transform.scale(load_image('losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
+fon_lose = pygame.transform.scale(load_image('fon/losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 
 
 class Button(pygame.sprite.Sprite):  # класс кнопок

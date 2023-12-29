@@ -176,7 +176,7 @@ TURRER = {'usual': [
              'buy_cost': 100}]
 }
 
-HINTS = ['hints/shop/firstlevel/defaulttower.png',
-         'hints/shop/firstlevel/green1tower.png',
-         'hints/shop/firstlevel/redtower1.png',
-         'hints/shop/firstlevel/blacktower1.png']
+HINTS = ['hints/defaulttower.png',
+         'hints/green1tower.png',
+         'hints/redtower1.png',
+         'hints/blacktower1.png']
