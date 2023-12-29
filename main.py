@@ -225,9 +225,12 @@ while running:
         else:
             time_the_next_wave = pygame.time.get_ticks()
 
+    # screen.blit(visual.load_image('defaulttower.png', transforms=(130, 70)), (170, 120))
+    # R
+    #visual.castle_group.draw(screen)
     if loosescreen.restart:
         pass
-        #нужно придумать как сделать рестарт игры
+    #придумать систему перезапуска
     pygame.display.flip()
     pygame.display.update()
 

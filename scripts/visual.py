@@ -3,7 +3,6 @@ import sys
 import os
 from scripts import constants as const
 from scripts import turrets
-from scripts import loosescreen
 import time
 
 pygame.init()
@@ -17,7 +16,7 @@ tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
 place_group = pygame.sprite.Group()
 button_sprites = pygame.sprite.Group()
-restart = False
+
 tile_width = tile_height = const.TILE_SIZE
 
 clicked = False
@@ -25,6 +24,7 @@ can_place_turr = None
 
 font = pygame.font.SysFont(None, 44)
 font_time = pygame.font.SysFont(None, 20)
+fon_wave = pygame.font.SysFont(None, 35)
 
 img = font.render('', True, 'BLUE')
 screen.blit(img, (50, 50))
@@ -204,7 +204,7 @@ class Castle(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH - 50, HEIGHT - 25)
+        self.rect.center = (WIDTH - 50, HEIGHT - 75)
 
         self.pos = (440, 480)
 
