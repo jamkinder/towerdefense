@@ -101,7 +101,8 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
 
-            if not create_turret(x, y) and visual.product == 'axe' and const.MONEY - const.TURRER[visual.product][0].get(
+            if not create_turret(x, y) and visual.product == 'axe' and const.MONEY - const.TURRER[visual.product][
+                0].get(
                     'buy_cost') >= 0 and event.button == 1:
 
                 visual.button_sprites = pygame.sprite.Group()
@@ -179,11 +180,13 @@ while running:
 
     visual.img = visual.font.render(str(const.MONEY), True, (255, 215, 0))
     visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
-    visual.wavetext = visual.font.render('ВОЛНА: ' + str(totalwave), True, 'red')
+    visual.wavetext = visual.fon_wave.render('ВОЛНА: ' + str(totalwave), True, 'red')
 
     visual.screen.blit(visual.img, (100, 15))
-    visual.screen.blit(visual.imgcastle, (460, 425))
-    visual.screen.blit(visual.wavetext, (WIDTH // 2.5, 10))
+    visual.screen.blit(visual.imgcastle, (460, 375))
+    screen.blit(visual.load_image('cantbuy.png', transforms=(170, const.TILE_SIZE)),
+                (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
+    visual.screen.blit(visual.wavetext, (15, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
 
     # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
     if len(enemy_group) == 0:
