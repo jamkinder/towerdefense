@@ -30,6 +30,7 @@ class Turret(pygame.sprite.Sprite):
         self.missile_group = pygame.sprite.Group()
 
         self.update_time = -self.cooldown
+        self.update_time_money = pygame.time.get_ticks()
 
         # создание визуального радиуса башни
         self.range_image = self.range_rect = None
@@ -47,6 +48,9 @@ class Turret(pygame.sprite.Sprite):
                 missil = self.attack()
                 if missil:
                     self.missile_group.add(missil)
+        if pygame.time.get_ticks() - self.update_time_money > const.TIME_MONEY:
+            const.MONEY += 1
+            self.update_time_money = pygame.time.get_ticks()
         self.missile_group.draw(surface)
         self.missile_group.update()
 

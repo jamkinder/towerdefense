@@ -44,6 +44,12 @@ def load_level(filename):
 
 
 def generate_level(level):
+    all_sprites = pygame.sprite.Group()
+    tiles_group = pygame.sprite.Group()
+    turrets_group = pygame.sprite.Group()
+    place_group = pygame.sprite.Group()
+    button_sprites = pygame.sprite.Group()
+    castle_group = pygame.sprite.Group()
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':  # вид грязи
@@ -86,8 +92,8 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
     def __init__(self, x, y, image, scale, _type, products=None):
         super().__init__(button_sprites)
         self._type = _type
-
-        self.image = pygame.transform.scale(image, (int(image.get_width() * scale), int(image.get_height() * scale)))
+        self.image = pygame.transform.scale(image,
+                                            (int(image.get_width() * scale) + 5, int(image.get_height() * scale) + 5))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
@@ -101,7 +107,6 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 product = self.product
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
-                Button(tile_width * 3.5 + 13, tile_height * 8.35 - 58, exit_image, 1, 'exit')
                 clicked = True
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
@@ -216,7 +221,7 @@ tile_images = {
 
 product = None
 
-shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 3.5 + 110, tile_height * 8.4))
+shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
 # class Camera:
@@ -234,4 +239,3 @@ Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 #     def update(self, target):
 #         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
 #         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
-

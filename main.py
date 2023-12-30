@@ -5,12 +5,6 @@ from scripts import visual
 from scripts import enemycontrols
 from scripts import enemyspawnerData as enemydata
 
-money = const.MONEY
-
-totalwave = 0
-time_the_next_wave = -1
-pluscoof = 20
-
 
 def create_turret(x_pos, y_pos):
     # определяем, можно ли там поставить турель
@@ -44,40 +38,50 @@ def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
                                     tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
-        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
     for j in range(20, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
                                     tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
-        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
 
 def new_wave(totalwav):  # создаёт новую волну
-    totalwav += 1
     enemydata.WAVES.update(
-        {str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5), round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
-    const.total_wave += totalwav
+        {str(1): [round(enemydata.WAVES.get(str(1))[0] * (1.5 * totalwav)),
+                  round(enemydata.WAVES.get(str(1))[1] * (1.5 * totalwav))]})
+    const.total_wave = totalwav
     const.enemies_alive = sum(enemydata.WAVES.get('1'))
     spawn_enemyes()
 
 
 def show_store():  # показывает магазин
     screen.blit(visual.shop_menu_image, (0, 0))
+
+    visual.button_sprites = pygame.sprite.Group()
+
     iteration = 0
     for tower in const.TURRER:
         screen.blit(visual.load_image(const.TURRER[tower][0].get('im'), transforms=(50, 50)),
-                    (15, 60 + 60 * iteration))
+                    (15, 60 + 65 * iteration))
         visual.Button(83, 60 + 60 * iteration, visual.buy_tower_image, 1, 'buy', products=tower)
         iteration += 1
+    visual.Button(visual.tile_width * 4 + 8, 60 + 60 * iteration, visual.exit_image, 1, 'exit')
+
     iteration = 0
     for hints in const.HINTS:
-        screen.blit(visual.load_image(hints, transforms=(92, 50)),
-                    (180, 60 + 60 * iteration))
+        screen.blit(visual.load_image(hints, transforms=(97, 60)),
+                    (190, 50 + 65 * iteration))
         iteration += 1
+
+
+def start_game():
+    all_g, tiles_g, turret_g, place_g = visual.generate_visual()
+    const.MONEY = 500
+    enemydata.WAVES = {'1': [1, 0]}
+    return all_g, tiles_g, turret_g, place_g, pygame.sprite.Group(), 0, -1, 20
 
 
 pygame.init()
@@ -87,16 +91,9 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 FPS = const.FPS
 
-all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-turret_group = pygame.sprite.Group()
-enemy_group = pygame.sprite.Group()
-place_group = pygame.sprite.Group()
-all_sprites, tiles_group, turret_group, place_group = visual.generate_visual()
+all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
-update_time = pygame.time.get_ticks()
-
-selected_turret = hints_upgrade = None
+selected_turret = None
 running = True
 
 while running:
@@ -154,6 +151,9 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 const.MONEY += 1000
+            elif event.key == pygame.K_DOWN:
+                (all_sprites, tiles_group, turret_group,
+                 place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
 
     # отрисовка объектов
     screen.fill('Black')
@@ -233,6 +233,5 @@ while running:
 
     pygame.display.flip()
     pygame.display.update()
-
     clock.tick(FPS)
 pygame.quit()
