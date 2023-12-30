@@ -22,6 +22,7 @@ ANIMATION_STEPS = 8
 ANIMATION_DELAY = 100
 total_wave = 1
 enemies_alive = 4
+TIME_MONEY = 2000
 
 # характеристики уровней turret
 TURRER = {'usual': [
@@ -175,3 +176,8 @@ TURRER = {'usual': [
     'axe': [{'im': 'axe.png',
              'buy_cost': 100}]
 }
+
+HINTS = ['hints/defaulttower.png',
+         'hints/green1tower.png',
+         'hints/redtower1.png',
+         'hints/blacktower1.png']

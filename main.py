@@ -4,11 +4,6 @@ from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
 from scripts import enemyspawnerData as enemydata
-from scripts import loosescreen
-money = const.MONEY
-totalwave = 0
-time_the_next_wave = -1
-pluscoof = 20
 
 
 def create_turret(x_pos, y_pos):
@@ -43,35 +38,50 @@ def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
                                     tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
-        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
     for j in range(20, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
         enemy = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
                                     tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
-        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
         enemy_group.add(enemy)
         all_sprites.add(enemy)
 
 
 def new_wave(totalwav):  # создаёт новую волну
-    totalwav += 1
     enemydata.WAVES.update(
-        {str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5), round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
-    const.total_wave += totalwav
+        {str(1): [round(enemydata.WAVES.get(str(1))[0] * (1.5 * totalwav)),
+                  round(enemydata.WAVES.get(str(1))[1] * (1.5 * totalwav))]})
+    const.total_wave = totalwav
     const.enemies_alive = sum(enemydata.WAVES.get('1'))
     spawn_enemyes()
 
 
 def show_store():  # показывает магазин
     screen.blit(visual.shop_menu_image, (0, 0))
+
+    visual.button_sprites = pygame.sprite.Group()
+
     iteration = 0
     for tower in const.TURRER:
         screen.blit(visual.load_image(const.TURRER[tower][0].get('im'), transforms=(50, 50)),
-                    (15, 60 + 60 * iteration))
+                    (15, 60 + 65 * iteration))
         visual.Button(83, 60 + 60 * iteration, visual.buy_tower_image, 1, 'buy', products=tower)
         iteration += 1
+    visual.Button(visual.tile_width * 4 + 8, 60 + 60 * iteration, visual.exit_image, 1, 'exit')
+
+    iteration = 0
+    for hints in const.HINTS:
+        screen.blit(visual.load_image(hints, transforms=(97, 60)),
+                    (190, 50 + 65 * iteration))
+        iteration += 1
+
+
+def start_game():
+    all_g, tiles_g, turret_g, place_g = visual.generate_visual()
+    const.MONEY = 500
+    enemydata.WAVES = {'1': [1, 0]}
+    return all_g, tiles_g, turret_g, place_g, pygame.sprite.Group(), 0, -1, 20
 
 
 pygame.init()
@@ -81,14 +91,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 FPS = const.FPS
 
-all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-turret_group = pygame.sprite.Group()
-enemy_group = pygame.sprite.Group()
-place_group = pygame.sprite.Group()
-all_sprites, tiles_group, turret_group, place_group = visual.generate_visual()
-
-update_time = pygame.time.get_ticks()
+all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
 selected_turret = None
 running = True
@@ -101,9 +104,8 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
 
-            if not create_turret(x, y) and visual.product == 'axe' and const.MONEY - const.TURRER[visual.product][
-                0].get(
-                    'buy_cost') >= 0 and event.button == 1:
+            if (not create_turret(x, y) and visual.product == 'axe'
+                    and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1):
 
                 visual.button_sprites = pygame.sprite.Group()
                 visual.Button(0, 0, visual.shop_image, 1, 'shop')
@@ -149,6 +151,11 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 const.MONEY += 1000
+            elif event.key == pygame.K_DOWN:
+                (all_sprites, tiles_group, turret_group,
+                 place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
+                if visual.losed:
+                    visual.losed = False
 
     # отрисовка объектов
     screen.fill('Black')
@@ -159,6 +166,7 @@ while running:
 
     if selected_turret:
         selected_turret.selected = True  # показываем диапазон
+
     # отрисовываем башни
     for turrets in turret_group:
         turrets.draw(screen)
@@ -178,15 +186,15 @@ while running:
 
     visual.button_sprites.draw(screen)
 
-    visual.img = visual.font.render(str(const.MONEY), True, (255, 215, 0))
-    visual.imgcastle = visual.font.render(str(visual.castle.hp), True, 'red')
-    visual.wavetext = visual.fon_wave.render('ВОЛНА: ' + str(totalwave), True, 'red')
+    visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
+    visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
+    visual.wavetext = visual.font_wave.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
 
-    visual.screen.blit(visual.img, (100, 15))
-    visual.screen.blit(visual.imgcastle, (460, 375))
-    screen.blit(visual.load_image('cantbuy.png', transforms=(170, const.TILE_SIZE)),
+    screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
                 (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
-    visual.screen.blit(visual.wavetext, (15, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
+    visual.screen.blit(visual.img, (105, 15))
+    visual.screen.blit(visual.imgcastle, (460, 375))
+    visual.screen.blit(visual.wavetext, (33 - len(str(totalwave)) * 5, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
 
     # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
     if len(enemy_group) == 0:
@@ -194,7 +202,7 @@ while running:
         if time_the_next_wave:
             # получаем время, через сколько будет волна и выводим его
             str_time = round(2 - float(str(abs(time_the_next_wave - pygame.time.get_ticks()) / 1000)[:3]), 1)
-            time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, 'red')
+            time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, (0, 0, 0))
             screen.blit(time, (200, const.SCREEN_HEIGHT - 20))
 
             # елси прошло достаточно времени с предыдущей волны
@@ -224,15 +232,9 @@ while running:
                 new_wave(totalwave)
         else:
             time_the_next_wave = pygame.time.get_ticks()
-
-    # screen.blit(visual.load_image('defaulttower.png', transforms=(130, 70)), (170, 120))
-    # R
-    #visual.castle_group.draw(screen)
-    if loosescreen.restart:
-        pass
-    #придумать систему перезапуска
+    if visual.losed:
+        visual.lose_screen()
     pygame.display.flip()
     pygame.display.update()
-
     clock.tick(FPS)
 pygame.quit()

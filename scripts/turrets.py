@@ -10,13 +10,16 @@ class Turret(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.name_turret = name_turret
 
-        self.upgrade_level = self.cost_upgrade = 1
+        self.upgrade_level = 1
         self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                        transforms=(const.TILE_SIZE, const.TILE_SIZE))
         self.range = const.TURRER[self.name_turret][self.upgrade_level - 1].get("range")
         self.cooldown = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cooldown")
         self.damage = const.TURRER[self.name_turret][self.upgrade_level - 1].get("damage")
         self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
+
+        self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                     pygame.Color((0, 0, 0)))
 
         self.target = None
 
@@ -27,6 +30,7 @@ class Turret(pygame.sprite.Sprite):
         self.missile_group = pygame.sprite.Group()
 
         self.update_time = -self.cooldown
+        self.update_time_money = pygame.time.get_ticks()
 
         # создание визуального радиуса башни
         self.range_image = self.range_rect = None
@@ -44,6 +48,9 @@ class Turret(pygame.sprite.Sprite):
                 missil = self.attack()
                 if missil:
                     self.missile_group.add(missil)
+        if pygame.time.get_ticks() - self.update_time_money > const.TIME_MONEY:
+            const.MONEY += 1
+            self.update_time_money = pygame.time.get_ticks()
         self.missile_group.draw(surface)
         self.missile_group.update()
 
@@ -51,6 +58,10 @@ class Turret(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         if self.selected:
             screen.blit(self.range_image, self.range_rect)
+            if self.name_turret != 'slowing' and self.upgrade_level != 5:
+                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
+            elif self.name_turret == 'slowing' and self.upgrade_level != 3:
+                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
 
     def radius(self):
         # создание визуального радиуса башни
@@ -80,7 +91,7 @@ class Turret(pygame.sprite.Sprite):
         else:
             missil = missile.Missile(
                 visual.load_image('Daco.png', colorkey=-1, transforms=(const.TILE_SIZE // 2, const.TILE_SIZE // 2)),
-                                  self.target, (self.rect.x, self.rect.y), self.damage)
+                self.target, (self.rect.x, self.rect.y), self.damage)
         return missil
 
     def upgrade(self):
@@ -105,3 +116,7 @@ class Turret(pygame.sprite.Sprite):
                 self.cooldown = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cooldown")
                 self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                                transforms=(const.TILE_SIZE, const.TILE_SIZE))
+                self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                             pygame.Color((255, 0, 0)))
+        self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
+                                                     pygame.Color((0, 0, 0)))

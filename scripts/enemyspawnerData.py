@@ -5,10 +5,10 @@ DATA = [{"health": 100,
          "speed": 1,
          'damage': 1},
         {"health": 80,
-         "speed": 2,
-         'damage': 1},
+         "speed": 5,
+         'damage': 5},
         {'health': 600,
          'speed': 2.5,
-         'damage': 1.5}]
+         'damage': 2}]
 
 enemyesalive = 0
