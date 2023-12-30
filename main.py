@@ -36,22 +36,22 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
-                                    tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
-        enemy_group.add(enemy)
-        all_sprites.add(enemy)
+        enemys = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
+                                     tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
+        enemy_group.add(enemys)
+        all_sprites.add(enemys)
 
     for j in range(20, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
-        enemy = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
-                                    tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
-        enemy_group.add(enemy)
-        all_sprites.add(enemy)
+        enemys = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
+                                     tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
+        enemy_group.add(enemys)
+        all_sprites.add(enemys)
 
 
 def new_wave(totalwav):  # создаёт новую волну
     enemydata.WAVES.update(
-        {str(1): [round(enemydata.WAVES.get(str(1))[0] * (1.5 * totalwav)),
-                  round(enemydata.WAVES.get(str(1))[1] * (1.5 * totalwav))]})
+        {str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5),
+                  round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
     const.total_wave = totalwav
     const.enemies_alive = sum(enemydata.WAVES.get('1'))
     spawn_enemyes()
@@ -156,6 +156,8 @@ while running:
                  place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
                     visual.losed = False
+            # elif event.key == pygame.K_RIGHT:
+            #     visual.Camera.update()
 
     # отрисовка объектов
     screen.fill('Black')

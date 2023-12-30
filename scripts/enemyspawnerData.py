@@ -8,7 +8,7 @@ DATA = [{"health": 100,
          "speed": 2,
          'damage': 1},
         {'health': 600,
-         'speed': 2.5,
+         'speed': 1,
          'damage': 2}]
 
 enemyesalive = 0

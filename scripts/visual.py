@@ -9,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 losed = False
 
+
 def load_image(name, colorkey=None, transforms=None):
     fullname = os.path.join('data/im', name)
     # если файл не существует, то выходим
@@ -178,18 +179,15 @@ def start_screen():
 
 def lose_screen():
     global losed
-    intro_text = ['                                    YOU LOSE',
+    intro_text = ['                     YOU LOSE',
                   '',
                   '',
                   '',
                   '',
                   '',
                   '',
-                  '',
-                  '',
-                  "            Press [down arrow] to resume the game"]
+                  "Press [down arrow] to resume the game"]
 
-    font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 20)
     text_coord = 150
     screen.blit(pygame.transform.scale(load_image('fon/losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT)),
                 (0, 0))
@@ -201,10 +199,6 @@ def lose_screen():
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
-
-
-
 
 
 # группы спрайтов
@@ -250,18 +244,20 @@ product = None
 shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
-# class Camera:
-#     # зададим начальный сдвиг камеры
-#     def __init__(self):
-#         self.dx = 0
-#         self.dy = 0
-#
-#     # сдвинуть объект obj на смещение камеры
-#     def apply(self, obj):
-#         obj.rect.x += self.dx
-#         obj.rect.y += self.dy
-#
-#     # позиционировать камеру на объекте target
-#     def update(self, target):
-#         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
-#         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+
+class Camera:
+    # зададим начальный сдвиг камеры
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    # позиционировать камеру на объекте target
+
+    def update(self, target):
+        self.dx = -(target.rect.x + target.rect.w // 2)
+        self.dy = -(target.rect.y + target.rect.h // 2)
