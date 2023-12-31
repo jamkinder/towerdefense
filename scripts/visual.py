@@ -2,7 +2,6 @@ import pygame
 import sys
 import os
 from scripts import constants as const
-from scripts import enemyspawnerData as enemydata
 from scripts import turrets
 
 pygame.init()
@@ -70,9 +69,9 @@ def generate_level(level):
             elif level[y][x] == 'l':  # lake - озеро
                 Tile('lake', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'h':  # вид грязи
-                Tile('grasshor', x, y, all_sprites)
+                Tile('grasshor', x, y, all_sprites, dirt_group)
             elif level[y][x] == ',':  # вид грязи
-                Tile('grassfull', x, y, all_sprites)
+                Tile('grassfull', x, y, all_sprites, dirt_group)
     # вернем игрока, а также размер поля в клетках
     return all_sprites, tiles_group, turrets_group, place_group
 
@@ -208,6 +207,7 @@ turrets_group = pygame.sprite.Group()
 place_group = pygame.sprite.Group()
 button_sprites = pygame.sprite.Group()
 castle_group = pygame.sprite.Group()
+dirt_group = pygame.sprite.Group()
 castle = Castle()
 castle.hp = 10
 castle_group.add(castle)
@@ -247,9 +247,10 @@ Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
 class Camera:
     # зададим начальный сдвиг камеры
-    def __init__(self):
+    def __init__(self,  field_size):
         self.dx = 0
         self.dy = 0
+        self.field_size = field_size
 
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj):

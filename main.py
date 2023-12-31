@@ -96,6 +96,7 @@ all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, tim
 selected_turret = None
 running = True
 
+# camera = visual.Camera((15, 10))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
@@ -107,20 +108,30 @@ while running:
             if (not create_turret(x, y) and visual.product == 'axe'
                     and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1):
 
-                visual.button_sprites = pygame.sprite.Group()
-                visual.Button(0, 0, visual.shop_image, 1, 'shop')
-
                 not_turret = True
                 for towers in turret_group:
                     if towers.rect.collidepoint((x, y)):
                         towers.kill()
                         not_turret = False
+
+                        visual.button_sprites = pygame.sprite.Group()
+                        visual.Button(0, 0, visual.shop_image, 1, 'shop')
+
+                        const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
+                        visual.product = None
+
+                for sprite in visual.dirt_group:
+                    if sprite.rect.collidepoint((x, y)):
+                        not_turret = False
                 if not_turret:
+                    visual.button_sprites = pygame.sprite.Group()
+                    visual.Button(0, 0, visual.shop_image, 1, 'shop')
+
                     place = visual.Tile('gun', x // const.TILE_SIZE,
                                         y // const.TILE_SIZE, place_group)
 
-                const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
-                visual.product = None
+                    const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
+                    visual.product = None
 
             elif create_turret(x, y) and visual.product and const.MONEY - const.TURRER[visual.product][0].get(
                     'buy_cost') >= 0 and event.button == 1:
@@ -156,6 +167,8 @@ while running:
                  place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
                     visual.losed = False
+            # elif event.key == pygame.K_LEFT:
+            #     camera.apply()
             # elif event.key == pygame.K_RIGHT:
             #     visual.Camera.update()
 
