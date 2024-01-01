@@ -80,6 +80,7 @@ def show_store():  # показывает магазин
 def start_game():
     all_g, tiles_g, turret_g, place_g = visual.generate_visual()
     const.MONEY = 500
+    camera.coord = 0
     enemyspawnerData.WAVES = {'1': [1, 0]}
     return all_g, tiles_g, turret_g, place_g, pygame.sprite.Group(), 0, -1, 20
 
@@ -88,6 +89,8 @@ pygame.init()
 size = WIDTH, HEIGHT = const.SCREEN_WIDTH, const.SCREEN_HEIGHT
 screen = pygame.display.set_mode(size)
 
+camera = visual.Camera(15)
+
 clock = pygame.time.Clock()
 FPS = const.FPS
 
@@ -95,8 +98,6 @@ all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, tim
 
 selected_turret = None
 running = True
-
-camera = visual.Camera(15)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
@@ -171,13 +172,18 @@ while running:
                     camera.coord -= const.TILE_SIZE
                     for sprite in all_sprites:
                         camera.apply(sprite, 1)
+                    for turret in turret_group:
+                        for missile in turret.missile_group:
+                            missile.rect.x += 50
             elif event.key == pygame.K_RIGHT:
                 if 0 <= camera.coord + const.TILE_SIZE <= camera.field_size_x:
                     visual.castle.rect.x -= const.TILE_SIZE
                     camera.coord += const.TILE_SIZE
                     for sprite in all_sprites:
                         camera.apply(sprite, -1)
-
+                    for turret in turret_group:
+                        for missile in turret.missile_group:
+                            missile.rect.x -= 50
     # отрисовка объектов
     screen.fill('Black')
     all_sprites.draw(screen)

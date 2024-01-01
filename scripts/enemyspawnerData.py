@@ -2,7 +2,7 @@
 
 WAVES = {'1': [1, 0]}
 DATA = [{"health": 100,
-         "speed": 1,
+         "speed": 5,
          'damage': 1},
         {"health": 80,
          "speed": 2,

@@ -80,7 +80,7 @@ def generate_level(level):
 def generate_visual():
     start_screen()
     castle.hp = 10
-    castle.rect.center = (const.SCREEN_WIDTH - 50, const.SCREEN_HEIGHT - 75)
+    castle.rect.center = (650, 100)
     return generate_level(load_level('map.txt'))
 
 
@@ -133,7 +133,7 @@ class Castle(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
-        self.rect.center = (const.SCREEN_WIDTH - 50, const.SCREEN_HEIGHT - 75)
+        self.rect.center = (650, 50)
 
     def take_damage(self, damage):
         self.hp -= damage
