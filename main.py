@@ -103,6 +103,10 @@ while running:
         if event.type == pygame.QUIT:  # при закрытии окна
             running = False
 
+        # ----------------------------
+        #           Клики
+        # ----------------------------
+
         if event.type == pygame.MOUSEBUTTONUP:
             x, y = event.pos
 
@@ -142,9 +146,14 @@ while running:
                 const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
 
                 # ровно ставим турель
-                new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
-                                      y // const.TILE_SIZE * const.TILE_SIZE,
-                                      visual.product)
+                if visual.product == 'slowing':
+                    new_turret = t.Darkturret(x // const.TILE_SIZE * const.TILE_SIZE,
+                                          y // const.TILE_SIZE * const.TILE_SIZE,
+                                          visual.product)
+                else:
+                    new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
+                                          y // const.TILE_SIZE * const.TILE_SIZE,
+                                          visual.product)
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
 
@@ -157,6 +166,10 @@ while running:
                     selected_turret = None
 
             visual.button_sprites.update()
+
+        # ----------------------------
+        #          Кнопки
+        # ----------------------------
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:

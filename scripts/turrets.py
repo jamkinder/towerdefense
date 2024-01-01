@@ -45,9 +45,7 @@ class Turret(pygame.sprite.Sprite):
             if self.target:  # если враг находится в диапазоне
                 # воспроизводим анимацию атаки и создаём снаряд
                 self.update_time = pygame.time.get_ticks()
-                missil = self.attack()
-                if missil:
-                    self.missile_group.add(missil)
+                self.attack()
         if pygame.time.get_ticks() - self.update_time_money > const.TIME_MONEY:
             const.MONEY += 1
             self.update_time_money = pygame.time.get_ticks()
@@ -58,9 +56,7 @@ class Turret(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         if self.selected:
             screen.blit(self.range_image, self.range_rect)
-            if self.name_turret != 'slowing' and self.upgrade_level != 5:
-                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
-            elif self.name_turret == 'slowing' and self.upgrade_level != 3:
+            if self.upgrade_level != 5:
                 screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
 
     def radius(self):
@@ -85,17 +81,12 @@ class Turret(pygame.sprite.Sprite):
 
     def attack(self):
         # создаёт снаряд
-        if self.name_turret != 'slowing':
-            missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
-                                     (self.rect.x, self.rect.y), self.damage)
-        else:
-            missil = missile.Missile(
-                visual.load_image('Daco.png', colorkey=-1, transforms=(const.TILE_SIZE // 2, const.TILE_SIZE // 2)),
-                self.target, (self.rect.x, self.rect.y), self.damage)
-        return missil
+        missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
+                                 (self.rect.x, self.rect.y), self.damage)
+        self.missile_group.add(missil)
 
     def upgrade(self):
-        if self.upgrade_level != 5 and self.name_turret != 'slowing':
+        if self.upgrade_level != 5:
             if const.MONEY >= self.cost_upgrade:
                 const.MONEY -= self.cost_upgrade
                 self.upgrade_level += 1
@@ -107,7 +98,29 @@ class Turret(pygame.sprite.Sprite):
                 self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
 
                 self.radius()
-        elif self.upgrade_level != 3 and self.name_turret == 'slowing':
+
+
+class Darkturret(Turret):
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+        if self.selected:
+            screen.blit(self.range_image, self.range_rect)
+            if self.upgrade_level != 3:
+                screen.blit(self.hints_upgrade, (self.rect.x - 10, self.rect.y - 20))
+
+    def pick_target(self, enemy_group):  # найти координаты цели
+        # проверяем находится ли враг в диапазоне
+        enem_gr = pygame.sprite.Group()
+        for enemy in enemy_group:
+            x_dist = enemy.rect.x - self.rect.x
+            y_dist = enemy.rect.y - self.rect.y
+            dist = sqrt(x_dist ** 2 + y_dist ** 2)
+            if dist < self.range and enemy.rect.y > 0:
+                enem_gr.add(enemy)
+        return enem_gr
+
+    def upgrade(self):
+        if self.upgrade_level != 3:
             if const.MONEY >= self.cost_upgrade:
                 const.MONEY -= self.cost_upgrade
                 self.upgrade_level += 1
@@ -120,3 +133,10 @@ class Turret(pygame.sprite.Sprite):
                                                              pygame.Color((255, 0, 0)))
         self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
                                                      pygame.Color((0, 0, 0)))
+
+    def attack(self):
+        for target in self.target:
+            missil = missile.Missile(
+                visual.load_image('Daco.png', colorkey=-1, transforms=(const.TILE_SIZE // 2, const.TILE_SIZE // 2)),
+                target, (self.rect.x, self.rect.y), self.damage)
+            self.missile_group.add(missil)
