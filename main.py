@@ -3,7 +3,7 @@ from scripts import turrets as t
 from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
-from scripts import enemyspawnerData as enemydata
+from scripts import enemyspawnerData
 
 
 def create_turret(x_pos, y_pos):
@@ -35,25 +35,25 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 
 def spawn_enemyes():  # функция спавна врагов
-    for i in range(0, -sum(enemydata.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemys = enemycontrols.Enemy(360, i, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)), 6, 1,
+    for i in range(0, -sum(enemyspawnerData.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
+        enemys = enemycontrols.Enemy(360 - camera.coord, i, visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)), 6, 1,
                                      tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
         enemy_group.add(enemys)
         all_sprites.add(enemys)
 
-    for j in range(20, -sum(enemydata.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
-        enemys = enemycontrols.Enemy(360, j, visual.load_image("enemies\S_walk_Blue.png", transforms=(300, 50)), 6, 1,
+    for j in range(20, -sum(enemyspawnerData.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
+        enemys = enemycontrols.Enemy(360 - camera.coord, j, visual.load_image(r"enemies\s_walk_blue.png", transforms=(300, 50)), 6, 1,
                                      tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
         enemy_group.add(enemys)
         all_sprites.add(enemys)
 
 
 def new_wave(totalwav):  # создаёт новую волну
-    enemydata.WAVES.update(
-        {str(1): [round(enemydata.WAVES.get(str(1))[0] * 1.5),
-                  round(enemydata.WAVES.get(str(1))[1] * 1.5)]})
+    enemyspawnerData.WAVES.update(
+        {str(1): [round(enemyspawnerData.WAVES.get(str(1))[0] * 1.5),
+                  round(enemyspawnerData.WAVES.get(str(1))[1] * 1.5)]})
     const.total_wave = totalwav
-    const.enemies_alive = sum(enemydata.WAVES.get('1'))
+    const.enemies_alive = sum(enemyspawnerData.WAVES.get('1'))
     spawn_enemyes()
 
 
@@ -80,7 +80,7 @@ def show_store():  # показывает магазин
 def start_game():
     all_g, tiles_g, turret_g, place_g = visual.generate_visual()
     const.MONEY = 500
-    enemydata.WAVES = {'1': [1, 0]}
+    enemyspawnerData.WAVES = {'1': [1, 0]}
     return all_g, tiles_g, turret_g, place_g, pygame.sprite.Group(), 0, -1, 20
 
 
@@ -96,7 +96,7 @@ all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, tim
 selected_turret = None
 running = True
 
-camera = visual.Camera((15, 10))
+camera = visual.Camera(15)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
@@ -109,44 +109,43 @@ while running:
                     and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1):
 
                 not_turret = True
-                for towers in turret_group:
-                    if towers.rect.collidepoint((x, y)):
-                        towers.kill()
-                        not_turret = False
-
-                        visual.button_sprites = pygame.sprite.Group()
-                        visual.Button(0, 0, visual.shop_image, 1, 'shop')
-
-                        const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
-                        visual.product = None
 
                 for sprite in visual.dirt_group:
                     if sprite.rect.collidepoint((x, y)):
                         not_turret = False
+                if visual.castle.rect.collidepoint((x - 25, y)):
+                    not_turret = False
+                if (x <= const.TILE_SIZE * 3 and y >= const.TILE_SIZE * 9) or (
+                        x <= const.TILE_SIZE * 2 and y <= const.TILE_SIZE):
+                    not_turret = False
                 if not_turret:
                     visual.button_sprites = pygame.sprite.Group()
                     visual.Button(0, 0, visual.shop_image, 1, 'shop')
 
-                    place = visual.Tile('gun', x // const.TILE_SIZE,
-                                        y // const.TILE_SIZE, place_group)
-
                     const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
                     visual.product = None
+                    for towers in turret_group:
+                        if towers.rect.collidepoint((x, y)):
+                            towers.kill()
+                            not_turret = False
 
-            elif create_turret(x, y) and visual.product and const.MONEY - const.TURRER[visual.product][0].get(
-                    'buy_cost') >= 0 and event.button == 1:
+                    if not_turret:
+                        place = visual.Tile('gun', x // const.TILE_SIZE,
+                                            y // const.TILE_SIZE, place_group, all_sprites)
 
+            elif create_turret(x, y) and visual.product and visual.product != 'axe' and const.MONEY - \
+                    const.TURRER[visual.product][0].get(
+                        'buy_cost') >= 0 and event.button == 1:
                 visual.button_sprites = pygame.sprite.Group()
                 visual.Button(0, 0, visual.shop_image, 1, 'shop')
                 const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
 
-                if visual.product != 'axe':
-                    # ровно ставим турель
-                    new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
-                                          y // const.TILE_SIZE * const.TILE_SIZE,
-                                          visual.product)
-                    turret_group.add(new_turret)
-                    all_sprites.add(new_turret)
+                # ровно ставим турель
+                new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
+                                      y // const.TILE_SIZE * const.TILE_SIZE,
+                                      visual.product)
+                turret_group.add(new_turret)
+                all_sprites.add(new_turret)
 
                 visual.product = None
             # показываем радиус
@@ -158,7 +157,6 @@ while running:
 
             visual.button_sprites.update()
 
-        # чит на деньги
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 const.MONEY += 1000
@@ -168,11 +166,17 @@ while running:
                 if visual.losed:
                     visual.losed = False
             elif event.key == pygame.K_LEFT:
-                for sprite in all_sprites:
-                    camera.apply(sprite, 1)
+                if 0 <= camera.coord - const.TILE_SIZE <= camera.field_size_x:
+                    visual.castle.rect.x += const.TILE_SIZE
+                    camera.coord -= const.TILE_SIZE
+                    for sprite in all_sprites:
+                        camera.apply(sprite, 1)
             elif event.key == pygame.K_RIGHT:
-                for sprite in all_sprites:
-                    camera.apply(sprite, -1)
+                if 0 <= camera.coord + const.TILE_SIZE <= camera.field_size_x:
+                    visual.castle.rect.x -= const.TILE_SIZE
+                    camera.coord += const.TILE_SIZE
+                    for sprite in all_sprites:
+                        camera.apply(sprite, -1)
 
     # отрисовка объектов
     screen.fill('Black')
@@ -210,7 +214,8 @@ while running:
     screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
                 (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
     visual.screen.blit(visual.img, (105, 15))
-    visual.screen.blit(visual.imgcastle, (460, 375))
+    visual.screen.blit(visual.imgcastle,
+                       (visual.castle.rect.x + const.TILE_SIZE // 1.5, visual.castle.rect.y - const.TILE_SIZE // 2))
     visual.screen.blit(visual.wavetext, (33 - len(str(totalwave)) * 5, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
 
     # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
@@ -230,20 +235,21 @@ while running:
                 totalwave += 1
 
                 if totalwave % 2 == 0:
-                    enemydata.DATA[0].update({'health': enemydata.DATA[0].get('health') + pluscoof})
-                    enemydata.DATA[1].update({'health': enemydata.DATA[1].get('health') + pluscoof})
+                    enemyspawnerData.DATA[0].update({'health': enemyspawnerData.DATA[0].get('health') + pluscoof})
+                    enemyspawnerData.DATA[1].update({'health': enemyspawnerData.DATA[1].get('health') + pluscoof})
 
                 if totalwave % 10 == 0:
-                    enemy = enemycontrols.Enemy(360, 5, visual.load_image("enemies\S_Walk.png", transforms=(320, 50)),
+                    enemy = enemycontrols.Enemy(360, 5, visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)),
                                                 6, 1,
                                                 tiles_group, visual.castle_group, 3,
                                                 visual.load_image('mar.png').get_rect())
                     # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
                     enemy_group.add(enemy)
                     all_sprites.add(enemy)
-                    enemydata.WAVES.update(
-                        {str(1): [round(enemydata.WAVES.get(str(1))[0] / enemydata.WAVES.get(str(1))[0]) + 1,
-                                  round(enemydata.WAVES.get(str(1))[1] * 0)]})
+                    enemyspawnerData.WAVES.update(
+                        {str(1): [
+                            round(enemyspawnerData.WAVES.get(str(1))[0] / enemyspawnerData.WAVES.get(str(1))[0]) + 1,
+                            round(enemyspawnerData.WAVES.get(str(1))[1] * 0)]})
                 if totalwave % 15 == 0:
                     pluscoof *= 5
                 new_wave(totalwave)

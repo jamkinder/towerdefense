@@ -45,16 +45,17 @@ def load_level(filename):
 
 
 def generate_level(level):
+    global all_sprites, tiles_group, turrets_group, place_group
+
     all_sprites = pygame.sprite.Group()
     tiles_group = pygame.sprite.Group()
     turrets_group = pygame.sprite.Group()
     place_group = pygame.sprite.Group()
-    button_sprites = pygame.sprite.Group()
-    castle_group = pygame.sprite.Group()
+
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':  # вид грязи
-                Tile('empty', x, y, all_sprites)
+                Tile('empty', x, y, all_sprites, dirt_group)
             elif level[y][x] == 't':  # turret - башня
                 Tile('gun', x, y, place_group, all_sprites)
                 turret = turrets.Turret(tile_width * x, tile_height * y, 'usual')
@@ -79,6 +80,7 @@ def generate_level(level):
 def generate_visual():
     start_screen()
     castle.hp = 10
+    castle.rect.center = (const.SCREEN_WIDTH - 50, const.SCREEN_HEIGHT - 75)
     return generate_level(load_level('map.txt'))
 
 
@@ -132,8 +134,6 @@ class Castle(pygame.sprite.Sprite):
         self.image.fill(color=(255, 0, 0, 0.5))
         self.rect = self.image.get_rect()
         self.rect.center = (const.SCREEN_WIDTH - 50, const.SCREEN_HEIGHT - 75)
-
-        self.pos = (440, 480)
 
     def take_damage(self, damage):
         self.hp -= damage
@@ -247,9 +247,10 @@ Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
 class Camera:
     # зададим начальный сдвиг камеры
-    def __init__(self,  field_size):
+    def __init__(self,  field_size_x):
         self.dx = const.TILE_SIZE
-        self.field_size = field_size
+        self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
+        self.coord = 0
 
     # сдвинуть объект obj на смещение камеры
     def apply(self, obj, x):
