@@ -96,7 +96,7 @@ all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, tim
 selected_turret = None
 running = True
 
-# camera = visual.Camera((15, 10))
+camera = visual.Camera((15, 10))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
@@ -167,10 +167,12 @@ while running:
                  place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
                     visual.losed = False
-            # elif event.key == pygame.K_LEFT:
-            #     camera.apply()
-            # elif event.key == pygame.K_RIGHT:
-            #     visual.Camera.update()
+            elif event.key == pygame.K_LEFT:
+                for sprite in all_sprites:
+                    camera.apply(sprite, 1)
+            elif event.key == pygame.K_RIGHT:
+                for sprite in all_sprites:
+                    camera.apply(sprite, -1)
 
     # отрисовка объектов
     screen.fill('Black')

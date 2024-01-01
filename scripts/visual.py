@@ -61,7 +61,7 @@ def generate_level(level):
                 turrets_group.add(turret)
                 all_sprites.add(turret)
             elif level[y][x] == 'p':  # place - свободное место под башню
-                Tile('gun', x, y, place_group)
+                Tile('gun', x, y, all_sprites, place_group)
             elif level[y][x] == '#':  # лес
                 Tile('wall', x, y, tiles_group, all_sprites)
             elif level[y][x] == 'c':  # castle - замок
@@ -248,17 +248,10 @@ Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 class Camera:
     # зададим начальный сдвиг камеры
     def __init__(self,  field_size):
-        self.dx = 0
-        self.dy = 0
+        self.dx = const.TILE_SIZE
         self.field_size = field_size
 
     # сдвинуть объект obj на смещение камеры
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        obj.rect.y += self.dy
+    def apply(self, obj, x):
+        obj.rect.x += self.dx * x
 
-    # позиционировать камеру на объекте target
-
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2)
