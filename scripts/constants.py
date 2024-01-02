@@ -6,7 +6,7 @@ SCREEN_WIDTH = TILE_SIZE * COLS
 SCREEN_HEIGHT = TILE_SIZE * ROWS
 FPS = 30
 HEALTH = 100
-MONEY = 500
+MONEY = 600
 TOTAL_LEVELS = 15
 
 # константа enemy
@@ -72,7 +72,7 @@ TURRER = {'usual': [
             # 1 level
             'im': 'green_turret/archer_level_1_green.png',
             'damage': 20,
-            "range": 80,
+            "range": 85,
             "cooldown": 600,
             'cost': 400,
             'buy_cost': 300
@@ -81,7 +81,7 @@ TURRER = {'usual': [
             # 2 level
             'im': 'green_turret/archer_level_2_green.png',
             'damage': 20,
-            "range": 90,
+            "range": 95,
             "cooldown": 500,
             'cost': 600
         },
@@ -89,7 +89,7 @@ TURRER = {'usual': [
             # 3 level
             'im': 'green_turret/archer_level_3_green.png',
             'damage': 25,
-            "range": 100,
+            "range": 105,
             "cooldown": 400,
             'cost': 700
         },
@@ -97,7 +97,7 @@ TURRER = {'usual': [
             # 4 level
             'im': 'green_turret/archer_level_4_green.png',
             'damage': 30,
-            "range": 110,
+            "range": 115,
             "cooldown": 300,
             'cost': 700
         },
@@ -105,7 +105,7 @@ TURRER = {'usual': [
             # 5 level
             'im': 'green_turret/archer_level_5_green.png',
             'damage': 35,
-            "range": 120,
+            "range": 125,
             "cooldown": 200,
             'cost': 800
         }],

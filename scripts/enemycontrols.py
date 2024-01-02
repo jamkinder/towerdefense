@@ -75,7 +75,7 @@ class Enemy(pygame.sprite.Sprite):
             else:
                 self.rect = self.rect.move(-self.vx * (50 // abs(self.vx)), 0)
         else:
-            self.rect = self.rect.move(self.vx * -(5 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
+            self.rect = self.rect.move(self.vx * -(15 // abs(self.vy)), self.vy * (50 // abs(self.vy)))
             if pygame.sprite.spritecollideany(self, self.tiles_group):
                 self.vy *= -1
                 self.rect = self.rect.move(0, self.vy * (50 // abs(self.vy)))
