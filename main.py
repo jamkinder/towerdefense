@@ -187,6 +187,7 @@ while running:
                     for sprite in all_sprites:
                         camera.apply(sprite, 1)
                     for turret in turret_group:
+                        turret.range_rect.x += 50
                         for missile in turret.missile_group:
                             missile.rect.x += 50
             elif event.key == pygame.K_RIGHT:
@@ -196,6 +197,7 @@ while running:
                     for sprite in all_sprites:
                         camera.apply(sprite, -1)
                     for turret in turret_group:
+                        turret.range_rect.x -= 50
                         for missile in turret.missile_group:
                             missile.rect.x -= 50
     # отрисовка объектов
