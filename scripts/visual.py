@@ -154,20 +154,19 @@ class Castle(pygame.sprite.Sprite):
             lose_screen()
             if not onlose:
                 try:
-                    if not onlose:
-                        onlose = True
-                        sqlite_connection = sqlite3.connect('record.db')
-                        cursor = sqlite_connection.cursor()
-                        totalwave = const.total_wave
-                        cursor.execute("SELECT number FROM records ORDER BY number DESC LIMIT 1")
-                        for elem in cursor:
-                            id_ = int(elem[0])
-                            id_ += 1
-                        print("Подключен к SQLite")
-                        cursor.execute("INSERT INTO records (number,maximum) VALUES (?,?)", (str(id_), str(totalwave)))
-                        sqlite_connection.commit()
-                        print('что-то произошло')
-                        cursor.close()
+                    onlose = True
+                    sqlite_connection = sqlite3.connect('record.db')
+                    cursor = sqlite_connection.cursor()
+                    totalwave = const.total_wave
+                    cursor.execute("SELECT number FROM records ORDER BY number DESC LIMIT 1")
+                    for elem in cursor:
+                        id_ = int(elem[0])
+                        id_ += 1
+                    print("Подключен к SQLite")
+                    cursor.execute("INSERT INTO records (number,maximum) VALUES (?,?)", (str(id_), str(totalwave)))
+                    sqlite_connection.commit()
+                    print('что-то произошло')
+                    cursor.close()
                 except sqlite3.OperationalError as error:
                     Tk().wm_withdraw()
                     messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
