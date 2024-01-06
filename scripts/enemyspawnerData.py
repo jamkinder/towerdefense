@@ -6,7 +6,7 @@ DATA = [{"health": 100,
          'damage': 1},
         {"health": 80,
          "speed": 3,
-         'damage': 11},
+         'damage': 1},
         {'health': 600,
          'speed': 1,
          'damage': 2}]

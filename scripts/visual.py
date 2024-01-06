@@ -10,10 +10,13 @@ from tkinter import messagebox
 
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+
 losed = False
 onlose = False
-WIDTH, HEIGHT = 500, 500
 scoremenu = False
+flag_pause = False
+
+WIDTH, HEIGHT = const.SCREEN_WIDTH, const.SCREEN_HEIGHT
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -296,6 +299,7 @@ can_place_turr = None
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
 font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_pause = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 50)
 font_healt_enemy = pygame.font.Font(None, 24)
 font_lose_screen = pygame.font.Font(None, 30)
 
@@ -304,6 +308,13 @@ shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, t
 buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+pause_image = pygame.Surface((WIDTH, HEIGHT))
+pause_image.fill((0, 0, 0))
+pause_image.set_colorkey((0, 0, 0))
+pygame.draw.rect(pause_image, "grey", (0, 0, WIDTH, HEIGHT))
+pause_image.set_alpha(150)
+pause_text = font_pause.render("Пауза", 1, pygame.Color(0, 0, 0))
 
 tile_images = {
     'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
