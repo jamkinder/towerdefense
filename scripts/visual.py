@@ -1,19 +1,21 @@
 import pygame
 import sys
 import os
-import traceback
 import webbrowser
 from scripts import constants as const
 from scripts import turrets
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 losed = False
 onlose = False
-WIDTH,HEIGHT = 500,500
+WIDTH, HEIGHT = 500, 500
 scoremenu = False
+
+
 def load_image(name, colorkey=None, transforms=None):
     fullname = os.path.join('data/im', name)
     # если файл не существует, то выходим
@@ -159,14 +161,15 @@ class Castle(pygame.sprite.Sprite):
                             id_ = int(elem[0])
                             id_ += 1
                         print("Подключен к SQLite")
-                        cursor.execute("INSERT INTO records (number,maximum) VALUES (?,?)",(str(id_),str(totalwave)))
+                        cursor.execute("INSERT INTO records (number,maximum) VALUES (?,?)", (str(id_), str(totalwave)))
                         sqlite_connection.commit()
                         print('что-то произошло')
                         cursor.close()
                 except sqlite3.OperationalError as error:
                     Tk().wm_withdraw()
                     messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
-                    webbrowser.open('https://drive.google.com/file/d/1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR/view?usp=sharing', new=2)
+                    webbrowser.open(
+                        'https://drive.google.com/u/0/uc?id=1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR&export=download', new=2)
                 finally:
                     if sqlite_connection:
                         sqlite_connection.close()
@@ -209,10 +212,6 @@ def start_screen():
             messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
             webbrowser.open('https://drive.google.com/file/d/1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR/view?usp=sharing', new=2)
 
-
-
-
-
     intro_text = [" " * 6 + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
@@ -246,7 +245,6 @@ def start_screen():
                         scoremenu = False
                 else:
                     return  # начинаем игру
-
 
             # elif event.type == pygame.KEYDOWN or \
             #         event.type == pygame.MOUSEBUTTONDOWN:
@@ -325,7 +323,7 @@ Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
 
 class Camera:
     # зададим начальный сдвиг камеры
-    def __init__(self,  field_size_x):
+    def __init__(self, field_size_x):
         self.dx = const.TILE_SIZE
         self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
         self.coord = 0
