@@ -118,18 +118,21 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
                 clicked = True
+                music_click.play()
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, shop_image, 1, 'shop')
                 clicked = False
                 product = None
+                music_click.play()
 
             elif self._type == 'buy':
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, cancel_image, 1, 'cancel')
                 product = self.product
                 clicked = False
+                music_click.play()
 
 
 class Castle(pygame.sprite.Sprite):
@@ -232,6 +235,7 @@ tile_width = tile_height = const.TILE_SIZE
 clicked = False
 can_place_turr = None
 
+# подгрузка картинок шрифтов
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
 font_min = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
@@ -244,6 +248,10 @@ shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, t
 buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+# подгрузка музыки
+music_click = pygame.mixer.Sound("data/music/click_m.mp3")
+music_hooked = pygame.mixer.Sound("data/music/hooked_m.mp3")
 
 pause_image = pygame.Surface((WIDTH, HEIGHT))
 pause_image.fill((0, 0, 0))
