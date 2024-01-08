@@ -234,7 +234,7 @@ can_place_turr = None
 
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
-font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_min = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
 font_pause = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 50)
 font_healt_enemy = pygame.font.Font(None, 24)
 font_lose_screen = pygame.font.Font(None, 30)

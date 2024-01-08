@@ -8,6 +8,8 @@ def menu(surface):
     fon = pygame.transform.scale(visual.load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     text_button = [visual.font.render('Играть', 1, pygame.Color('black')),
                    visual.font.render('Выйти', 1, pygame.Color('black'))]
+    active_text_button = [visual.font_min.render('Играть', 1, pygame.Color('black')),
+                          visual.font_min.render('Выйти', 1, pygame.Color('black'))]
     running = True
     while running:
         for event in pygame.event.get():
@@ -21,6 +23,10 @@ def menu(surface):
                     return False
         surface.blit(fon, (0, 0))
         for i in range(len(text_button)):
+            x, y = pygame.mouse.get_pos()
             surface.blit(image_button, (180, 230 * (1 + i * 0.5)))
-            surface.blit(text_button[i], (211, 250 * (1 + i * 0.45)))
+            if 180 <= x <= 180 + 150 and 230 * (1 + i * 0.5) <= y <= 305 * (1 + i * 0.5):
+                surface.blit(active_text_button[i], (215 + 5, 250 * (1 + i * 0.45) + 5))
+            else:
+                surface.blit(text_button[i], (215, 250 * (1 + i * 0.45)))
         pygame.display.flip()

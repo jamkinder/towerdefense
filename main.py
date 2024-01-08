@@ -250,7 +250,7 @@ while running:
 
         visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
         visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
-        visual.wavetext = visual.font_wave.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
+        visual.wavetext = visual.font_min.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
 
         screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
                     (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
