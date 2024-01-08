@@ -36,13 +36,15 @@ def clear_selected_turret():  # скрывает все радиусы баше�
 
 def spawn_enemyes():  # функция спавна врагов
     for i in range(0, -sum(enemyspawnerData.WAVES.get(str(1))) * const.TILE_SIZE, -const.TILE_SIZE):
-        enemys = enemycontrols.Enemy(360 - camera.coord, i, visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)), 6, 1,
+        enemys = enemycontrols.Enemy(360 - camera.coord, i,
+                                     visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)), 6, 1,
                                      tiles_group, visual.castle_group, 1, visual.load_image('mar.png').get_rect())
         enemy_group.add(enemys)
         all_sprites.add(enemys)
 
     for j in range(20, -sum(enemyspawnerData.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
-        enemys = enemycontrols.Enemy(360 - camera.coord, j, visual.load_image(r"enemies\s_walk_blue.png", transforms=(300, 50)), 6, 1,
+        enemys = enemycontrols.Enemy(360 - camera.coord, j,
+                                     visual.load_image(r"enemies\s_walk_blue.png", transforms=(300, 50)), 6, 1,
                                      tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
         enemy_group.add(enemys)
         all_sprites.add(enemys)
@@ -107,7 +109,7 @@ while running:
         #           Клики
         # ----------------------------
 
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONUP and not visual.flag_pause:
             x, y = event.pos
 
             if (not create_turret(x, y) and visual.product == 'axe'
@@ -148,8 +150,8 @@ while running:
                 # ровно ставим турель
                 if visual.product == 'slowing':
                     new_turret = t.Darkturret(x // const.TILE_SIZE * const.TILE_SIZE,
-                                          y // const.TILE_SIZE * const.TILE_SIZE,
-                                          visual.product)
+                                              y // const.TILE_SIZE * const.TILE_SIZE,
+                                              visual.product)
                 else:
                     new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                           y // const.TILE_SIZE * const.TILE_SIZE,
@@ -172,15 +174,14 @@ while running:
         # ----------------------------
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and not visual.flag_pause:
                 const.MONEY += 1000
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN and not visual.flag_pause and visual.losed:
                 (all_sprites, tiles_group, turret_group,
                  place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
-                    visual.onlose = False
                     visual.losed = False
-            elif event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT and not visual.flag_pause:
                 if 0 <= camera.coord - const.TILE_SIZE <= camera.field_size_x:
                     visual.castle.rect.x += const.TILE_SIZE
                     camera.coord -= const.TILE_SIZE
@@ -190,7 +191,7 @@ while running:
                         turret.range_rect.x += 50
                         for missile in turret.missile_group:
                             missile.rect.x += 50
-            elif event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT and not visual.flag_pause:
                 if 0 <= camera.coord + const.TILE_SIZE <= camera.field_size_x:
                     visual.castle.rect.x -= const.TILE_SIZE
                     camera.coord += const.TILE_SIZE
@@ -200,86 +201,103 @@ while running:
                         turret.range_rect.x -= 50
                         for missile in turret.missile_group:
                             missile.rect.x -= 50
-    # отрисовка объектов
-    screen.fill('Black')
-    all_sprites.draw(screen)
-    place_group.draw(screen)
-    # скроем диапазоны каждой башни
-    clear_selected_turret()
+            elif event.key == pygame.K_ESCAPE:
+                # меняем флаг паузы на противоположный
+                visual.flag_pause = not visual.flag_pause
+                # создаём меню паузы
+                screen.blit(visual.pause_image, (0, 0))
+                screen.blit(visual.pause_text,
+                            (const.SCREEN_WIDTH // 2 - const.TILE_SIZE, const.SCREEN_HEIGHT // 2 - const.TILE_SIZE))
+                # отображаем изменения
+                pygame.display.flip()
+                pygame.display.update()
 
-    if selected_turret:
-        selected_turret.selected = True  # показываем диапазон
+    # если сейчас не пауза
+    if not visual.flag_pause:
+        # отрисовка объектов
+        screen.fill('Black')
+        all_sprites.draw(screen)
+        place_group.draw(screen)
+        # скроем диапазоны каждой башни
+        clear_selected_turret()
 
-    # отрисовываем башни
-    for turrets in turret_group:
-        turrets.draw(screen)
+        if selected_turret:
+            # показываем диапазон
+            selected_turret.selected = True
 
-    enemy_group.update()
-    turret_group.update(enemy_group, screen)
+        # отрисовываем башни
+        for turrets in turret_group:
+            turrets.draw(screen)
 
-    # обновление экрана
-    if visual.clicked:
-        show_store()
+        enemy_group.update()
+        turret_group.update(enemy_group, screen)
 
-    # если пользователь выбрал товар, рисуем его около курсора
-    if visual.product:
-        mouse_pos = pygame.mouse.get_pos()
-        screen.blit(visual.load_image(const.TURRER[visual.product][0].get('im'), transforms=(50, 50)),
-                    (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
+        # обновление экрана
+        if visual.clicked:
+            show_store()
 
-    visual.button_sprites.draw(screen)
+        # если пользователь выбрал товар, рисуем его около курсора
+        if visual.product:
+            mouse_pos = pygame.mouse.get_pos()
+            screen.blit(visual.load_image(const.TURRER[visual.product][0].get('im'), transforms=(50, 50)),
+                        (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
 
-    visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
-    visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
-    visual.wavetext = visual.font_wave.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
+        visual.button_sprites.draw(screen)
 
-    screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
-                (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
-    visual.screen.blit(visual.img, (105, 15))
-    visual.screen.blit(visual.imgcastle,
-                       (visual.castle.rect.x + const.TILE_SIZE // 1.5, visual.castle.rect.y - const.TILE_SIZE // 2))
-    visual.screen.blit(visual.wavetext, (33 - len(str(totalwave)) * 5, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
+        visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
+        visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
+        visual.wavetext = visual.font_wave.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
 
-    # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
-    if len(enemy_group) == 0:
-        # если time_the_next_wave содержит в себя время
-        if time_the_next_wave:
-            # получаем время, через сколько будет волна и выводим его
-            str_time = round(2 - float(str(abs(time_the_next_wave - pygame.time.get_ticks()) / 1000)[:3]), 1)
-            time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, (0, 0, 0))
-            screen.blit(time, (200, const.SCREEN_HEIGHT - 20))
+        screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
+                    (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
+        visual.screen.blit(visual.img, (105, 15))
+        visual.screen.blit(visual.imgcastle,
+                           (visual.castle.rect.x + const.TILE_SIZE // 1.5, visual.castle.rect.y - const.TILE_SIZE // 2))
+        visual.screen.blit(visual.wavetext,
+                           (33 - len(str(totalwave)) * 5, const.SCREEN_HEIGHT - const.TILE_SIZE // 1.4))
 
-            # елси прошло достаточно времени с предыдущей волны
-            if (time_the_next_wave == -1 or pygame.time.get_ticks() - time_the_next_wave >=
-                    const.TIME_UNTIL_THE_NEXT_WAVE):
-                time_the_next_wave = None
+        # проверка на то, закончилась ли волна каким либо образом и если это так, то вызываем следующую волну.
+        if len(enemy_group) == 0:
+            # если time_the_next_wave содержит в себя время
+            if time_the_next_wave:
+                # получаем время, через сколько будет волна и выводим его
+                str_time = round(2 - float(str(abs(time_the_next_wave - pygame.time.get_ticks()) / 1000)[:3]), 1)
+                time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, (0, 0, 0))
+                screen.blit(time, (200, const.SCREEN_HEIGHT - 20))
 
-                totalwave += 1
+                # елси прошло достаточно времени с предыдущей волны
+                if (time_the_next_wave == -1 or pygame.time.get_ticks() - time_the_next_wave >=
+                        const.TIME_UNTIL_THE_NEXT_WAVE):
+                    time_the_next_wave = None
 
-                if totalwave % 2 == 0:
-                    enemyspawnerData.DATA[0].update({'health': enemyspawnerData.DATA[0].get('health') + pluscoof})
-                    enemyspawnerData.DATA[1].update({'health': enemyspawnerData.DATA[1].get('health') + pluscoof})
+                    totalwave += 1
 
-                if totalwave % 10 == 0:
-                    enemy = enemycontrols.Enemy(360, 5, visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)),
-                                                6, 1,
-                                                tiles_group, visual.castle_group, 3,
-                                                visual.load_image('mar.png').get_rect())
-                    # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
-                    enemy_group.add(enemy)
-                    all_sprites.add(enemy)
-                    enemyspawnerData.WAVES.update(
-                        {str(1): [
-                            round(enemyspawnerData.WAVES.get(str(1))[0] / enemyspawnerData.WAVES.get(str(1))[0]) + 1,
-                            round(enemyspawnerData.WAVES.get(str(1))[1] * 0)]})
-                if totalwave % 15 == 0:
-                    pluscoof *= 5
-                new_wave(totalwave)
-        else:
-            time_the_next_wave = pygame.time.get_ticks()
-    if visual.losed:
-        visual.lose_screen()
-    pygame.display.flip()
-    pygame.display.update()
-    clock.tick(FPS)
+                    if totalwave % 2 == 0:
+                        enemyspawnerData.DATA[0].update({'health': enemyspawnerData.DATA[0].get('health') + pluscoof})
+                        enemyspawnerData.DATA[1].update({'health': enemyspawnerData.DATA[1].get('health') + pluscoof})
+
+                    if totalwave % 10 == 0:
+                        enemy = enemycontrols.Enemy(360, 5,
+                                                    visual.load_image(r"enemies\s_walk.png", transforms=(320, 50)),
+                                                    6, 1,
+                                                    tiles_group, visual.castle_group, 3,
+                                                    visual.load_image('mar.png').get_rect())
+                        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
+                        enemy_group.add(enemy)
+                        all_sprites.add(enemy)
+                        enemyspawnerData.WAVES.update(
+                            {str(1): [
+                                round(
+                                    enemyspawnerData.WAVES.get(str(1))[0] / enemyspawnerData.WAVES.get(str(1))[0]) + 1,
+                                round(enemyspawnerData.WAVES.get(str(1))[1] * 0)]})
+                    if totalwave % 15 == 0:
+                        pluscoof *= 5
+                    new_wave(totalwave)
+            else:
+                time_the_next_wave = pygame.time.get_ticks()
+        if visual.losed:
+            visual.lose_screen()
+        pygame.display.flip()
+        pygame.display.update()
+        clock.tick(FPS)
 pygame.quit()

@@ -10,10 +10,13 @@ from tkinter import messagebox
 
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
+
 losed = False
 onlose = False
-WIDTH, HEIGHT = 500, 500
 scoremenu = False
+flag_pause = False
+
+WIDTH, HEIGHT = const.SCREEN_WIDTH, const.SCREEN_HEIGHT
 
 
 def load_image(name, colorkey=None, transforms=None):
@@ -144,36 +147,10 @@ class Castle(pygame.sprite.Sprite):
 
     def take_damage(self, damage):
         self.hp -= damage
-        global onlose
         if self.hp <= 0:
             global losed
             losed = True
             lose_screen()
-            if not onlose:
-                try:
-                    if not onlose:
-                        onlose = True
-                        sqlite_connection = sqlite3.connect('record.db')
-                        cursor = sqlite_connection.cursor()
-                        totalwave = const.total_wave
-                        cursor.execute("SELECT number FROM records ORDER BY number DESC LIMIT 1")
-                        for elem in cursor:
-                            id_ = int(elem[0])
-                            id_ += 1
-                        print("Подключен к SQLite")
-                        cursor.execute("INSERT INTO records (number,maximum) VALUES (?,?)", (str(id_), str(totalwave)))
-                        sqlite_connection.commit()
-                        print('что-то произошло')
-                        cursor.close()
-                except sqlite3.OperationalError as error:
-                    Tk().wm_withdraw()
-                    messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
-                    webbrowser.open(
-                        'https://drive.google.com/u/0/uc?id=1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR&export=download', new=2)
-                finally:
-                    if sqlite_connection:
-                        sqlite_connection.close()
-                        print("Соединение с SQLite закрыто")
 
     def show(self):
         pass
@@ -227,28 +204,12 @@ def start_screen():
         screen.blit(string_rendered, intro_rect)
 
     while True:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                global scoremenu
-                if event.button == 3:
-                    if not scoremenu:
-                        screen.fill('black')
-                        scoremenu = True
-                        pygame.display.update()
-                        leader_board()
-                    else:
-                        pygame.display.update()
-                        start_screen()
-                        scoremenu = False
-                else:
-                    return  # начинаем игру
-
-            # elif event.type == pygame.KEYDOWN or \
-            #         event.type == pygame.MOUSEBUTTONDOWN:
-            #     return  # начинаем игру
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return  # начинаем игру
         pygame.display.flip()
 
 
@@ -296,6 +257,7 @@ can_place_turr = None
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
 font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_pause = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 50)
 font_healt_enemy = pygame.font.Font(None, 24)
 font_lose_screen = pygame.font.Font(None, 30)
 
@@ -304,6 +266,13 @@ shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, t
 buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+pause_image = pygame.Surface((WIDTH, HEIGHT))
+pause_image.fill((0, 0, 0))
+pause_image.set_colorkey((0, 0, 0))
+pygame.draw.rect(pause_image, "grey", (0, 0, WIDTH, HEIGHT))
+pause_image.set_alpha(150)
+pause_text = font_pause.render("Пауза", 1, pygame.Color(0, 0, 0))
 
 tile_images = {
     'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
