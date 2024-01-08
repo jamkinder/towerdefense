@@ -1,12 +1,8 @@
 import pygame
 import sys
 import os
-import webbrowser
 from scripts import constants as const
 from scripts import turrets
-import sqlite3
-from tkinter import *
-from tkinter import messagebox
 
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
@@ -122,18 +118,21 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 button_sprites = pygame.sprite.Group()
                 # кнопка открытия меню магазина
                 clicked = True
+                music_click.play()
 
             elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, shop_image, 1, 'shop')
                 clicked = False
                 product = None
+                music_click.play()
 
             elif self._type == 'buy':
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, cancel_image, 1, 'cancel')
                 product = self.product
                 clicked = False
+                music_click.play()
 
 
 class Castle(pygame.sprite.Sprite):
@@ -152,8 +151,17 @@ class Castle(pygame.sprite.Sprite):
             losed = True
             lose_screen()
 
-    def show(self):
-        pass
+
+class Camera:
+    # зададим начальный сдвиг камеры
+    def __init__(self, field_size_x):
+        self.dx = const.TILE_SIZE
+        self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
+        self.coord = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj, x):
+        obj.rect.x += self.dx * x
 
 
 def terminate():
@@ -162,33 +170,6 @@ def terminate():
 
 
 def start_screen():
-    def leader_board():
-        try:
-            i = 35
-            column_space = 200
-
-            head1 = font.render(f'ATTEMP', True, 'white')
-            head2 = font.render(f'SCORE', True, 'white')
-            screen.blit(head1, [WIDTH / 5, (700 / 4) + 5])
-            screen.blit(head2, [WIDTH / 5 + column_space, (700 / 4) + 5])
-
-            sqlite_connection = sqlite3.connect('record.db')
-            cursor = sqlite_connection.cursor()
-            cursor.execute('SELECT * FROM records ORDER BY number desc LIMIT 10')
-            rows = cursor.fetchall()
-            for row in rows:
-                print('1')
-                column1 = font.render('{:>3}'.format(row[0]), True, 'white')
-                column2 = font.render('{:5}'.format(row[1]), True, 'white')
-                screen.blit(column1, [WIDTH / 5, (700 / 4) + i + 5])
-                screen.blit(column2, [WIDTH / 5 + column_space, (700 / 4) + i + 5])
-
-                i += 35
-        except sqlite3.OperationalError as error:
-            Tk().wm_withdraw()
-            messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
-            webbrowser.open('https://drive.google.com/file/d/1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR/view?usp=sharing', new=2)
-
     intro_text = [" " * 6 + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
@@ -254,9 +235,10 @@ tile_width = tile_height = const.TILE_SIZE
 clicked = False
 can_place_turr = None
 
+# подгрузка картинок шрифтов
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
-font_wave = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
+font_min = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
 font_pause = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 50)
 font_healt_enemy = pygame.font.Font(None, 24)
 font_lose_screen = pygame.font.Font(None, 30)
@@ -266,6 +248,10 @@ shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, t
 buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
+
+# подгрузка музыки
+music_click = pygame.mixer.Sound("data/music/click_m.mp3")
+music_hooked = pygame.mixer.Sound("data/music/hooked_m.mp3")
 
 pause_image = pygame.Surface((WIDTH, HEIGHT))
 pause_image.fill((0, 0, 0))
@@ -288,15 +274,3 @@ product = None
 
 shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
-
-
-class Camera:
-    # зададим начальный сдвиг камеры
-    def __init__(self, field_size_x):
-        self.dx = const.TILE_SIZE
-        self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
-        self.coord = 0
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj, x):
-        obj.rect.x += self.dx * x
