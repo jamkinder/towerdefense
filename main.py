@@ -4,6 +4,7 @@ from scripts import constants as const
 from scripts import visual
 from scripts import enemycontrols
 from scripts import enemyspawnerData
+from scripts import menu
 
 
 def create_turret(x_pos, y_pos):
@@ -93,13 +94,16 @@ screen = pygame.display.set_mode(size)
 
 camera = visual.Camera(15)
 
+running = menu.menu(screen)
+
 clock = pygame.time.Clock()
 FPS = const.FPS
 
-all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
+if running:
+    all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
 selected_turret = None
-running = True
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна

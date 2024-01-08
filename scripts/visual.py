@@ -1,12 +1,8 @@
 import pygame
 import sys
 import os
-import webbrowser
 from scripts import constants as const
 from scripts import turrets
-import sqlite3
-from tkinter import *
-from tkinter import messagebox
 
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
@@ -152,8 +148,17 @@ class Castle(pygame.sprite.Sprite):
             losed = True
             lose_screen()
 
-    def show(self):
-        pass
+
+class Camera:
+    # зададим начальный сдвиг камеры
+    def __init__(self, field_size_x):
+        self.dx = const.TILE_SIZE
+        self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
+        self.coord = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj, x):
+        obj.rect.x += self.dx * x
 
 
 def terminate():
@@ -162,33 +167,6 @@ def terminate():
 
 
 def start_screen():
-    def leader_board():
-        try:
-            i = 35
-            column_space = 200
-
-            head1 = font.render(f'ATTEMP', True, 'white')
-            head2 = font.render(f'SCORE', True, 'white')
-            screen.blit(head1, [WIDTH / 5, (700 / 4) + 5])
-            screen.blit(head2, [WIDTH / 5 + column_space, (700 / 4) + 5])
-
-            sqlite_connection = sqlite3.connect('record.db')
-            cursor = sqlite_connection.cursor()
-            cursor.execute('SELECT * FROM records ORDER BY number desc LIMIT 10')
-            rows = cursor.fetchall()
-            for row in rows:
-                print('1')
-                column1 = font.render('{:>3}'.format(row[0]), True, 'white')
-                column2 = font.render('{:5}'.format(row[1]), True, 'white')
-                screen.blit(column1, [WIDTH / 5, (700 / 4) + i + 5])
-                screen.blit(column2, [WIDTH / 5 + column_space, (700 / 4) + i + 5])
-
-                i += 35
-        except sqlite3.OperationalError as error:
-            Tk().wm_withdraw()
-            messagebox.showinfo('Bad boy', "don't delete the table anymore ^_^")
-            webbrowser.open('https://drive.google.com/file/d/1OAXQJHk0suw3ifhCjx0P5axIYd7TMMCR/view?usp=sharing', new=2)
-
     intro_text = [" " * 6 + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
@@ -288,15 +266,3 @@ product = None
 
 shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
-
-
-class Camera:
-    # зададим начальный сдвиг камеры
-    def __init__(self, field_size_x):
-        self.dx = const.TILE_SIZE
-        self.field_size_x = field_size_x * const.TILE_SIZE - const.SCREEN_WIDTH
-        self.coord = 0
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj, x):
-        obj.rect.x += self.dx * x
