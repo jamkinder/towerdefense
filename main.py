@@ -173,6 +173,12 @@ while running:
 
             visual.button_sprites.update()
 
+        if event.type == pygame.MOUSEBUTTONUP and visual.flag_pause:
+            x, y = event.pos
+            if 160 <= x <= 360 and 275 <= y <= 350:
+                running = menu.menu(screen)
+                visual.music_click.play()
+
         # ----------------------------
         #          Кнопки
         # ----------------------------
@@ -212,9 +218,8 @@ while running:
                 screen.blit(visual.pause_image, (0, 0))
                 screen.blit(visual.pause_text,
                             (const.SCREEN_WIDTH // 2 - const.TILE_SIZE, const.SCREEN_HEIGHT // 2 - const.TILE_SIZE))
-                # отображаем изменения
-                pygame.display.flip()
-                pygame.display.update()
+                screen.blit(visual.load_image('fon/cantbuy.png', transforms=(200, 75)), (160, 275))
+                screen.blit(visual.font_min.render('Выйти в меню', 1, pygame.Color('black')), (190, 300))
 
     # если сейчас не пауза
     if not visual.flag_pause:
@@ -301,7 +306,7 @@ while running:
                 time_the_next_wave = pygame.time.get_ticks()
         if visual.losed:
             visual.lose_screen()
-        pygame.display.flip()
-        pygame.display.update()
-        clock.tick(FPS)
+    pygame.display.flip()
+    pygame.display.update()
+    clock.tick(FPS)
 pygame.quit()

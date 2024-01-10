@@ -274,3 +274,4 @@ product = None
 
 shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
+
