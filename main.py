@@ -100,7 +100,8 @@ clock = pygame.time.Clock()
 FPS = const.FPS
 
 if running:
-    all_sprites, tiles_group, turret_group, place_group, enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
+    all_sprites, tiles_group, turret_group, place_group,\
+        enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
 selected_turret = None
 
@@ -173,11 +174,18 @@ while running:
 
             visual.button_sprites.update()
 
+        # отслеживание кликов в паузе
         if event.type == pygame.MOUSEBUTTONUP and visual.flag_pause:
             x, y = event.pos
             if 160 <= x <= 360 and 275 <= y <= 350:
-                running = menu.menu(screen)
                 visual.music_click.play()
+                visual.flag_pause = False
+                running = menu.menu(screen)
+                if running:
+                    (all_sprites, tiles_group, turret_group,
+                     place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
+                if visual.losed:
+                    visual.losed = False
 
         # ----------------------------
         #          Кнопки
@@ -187,8 +195,10 @@ while running:
             if event.key == pygame.K_UP and not visual.flag_pause:
                 const.MONEY += 1000
             elif event.key == pygame.K_DOWN and not visual.flag_pause and visual.losed:
-                (all_sprites, tiles_group, turret_group,
-                 place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
+                running = menu.menu(screen)
+                if running:
+                    (all_sprites, tiles_group, turret_group,
+                     place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
                     visual.losed = False
             elif event.key == pygame.K_LEFT and not visual.flag_pause:
