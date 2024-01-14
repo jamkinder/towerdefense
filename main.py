@@ -100,7 +100,7 @@ clock = pygame.time.Clock()
 FPS = const.FPS
 
 if running:
-    all_sprites, tiles_group, turret_group, place_group,\
+    all_sprites, tiles_group, turret_group, place_group, \
         enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
 selected_turret = None
@@ -244,10 +244,11 @@ while running:
             # показываем диапазон
             selected_turret.selected = True
 
-        # отрисовываем башни
+        # показываем башни
         for turrets in turret_group:
             turrets.draw(screen)
 
+        # обновляем врагов и башни
         enemy_group.update()
         turret_group.update(enemy_group, screen)
 
@@ -261,12 +262,15 @@ while running:
             screen.blit(visual.load_image(const.TURRER[visual.product][0].get('im'), transforms=(50, 50)),
                         (mouse_pos[0] - const.TILE_SIZE // 2, mouse_pos[1] - const.TILE_SIZE // 2))
 
+        # показываем кнопки
         visual.button_sprites.draw(screen)
 
+        # создаём отображение волны, денег, и здоровья главной башни
         visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
         visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
         visual.wavetext = visual.font_min.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
 
+        # показываем волну, деньги, и здоровье главной башни
         screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),
                     (0, const.SCREEN_HEIGHT - const.TILE_SIZE))
         visual.screen.blit(visual.img, (105, 15))
@@ -301,7 +305,6 @@ while running:
                                                     6, 1,
                                                     tiles_group, visual.castle_group, 3,
                                                     visual.load_image('mar.png').get_rect())
-                        # enemy = enemycontrols.Enemy(360, i, 'mar.png', tiles_group, visual.castle_group, 1)
                         enemy_group.add(enemy)
                         all_sprites.add(enemy)
                         enemyspawnerData.WAVES.update(
@@ -314,8 +317,11 @@ while running:
                     new_wave(totalwave)
             else:
                 time_the_next_wave = pygame.time.get_ticks()
+
         if visual.losed:
             visual.lose_screen()
+
+    # обновляем экран
     pygame.display.flip()
     pygame.display.update()
     clock.tick(FPS)

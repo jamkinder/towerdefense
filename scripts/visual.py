@@ -7,15 +7,12 @@ from scripts import turrets
 pygame.init()
 screen = pygame.display.set_mode((const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
 
-losed = False
-onlose = False
-scoremenu = False
-flag_pause = False
-
 WIDTH, HEIGHT = const.SCREEN_WIDTH, const.SCREEN_HEIGHT
 
 
 def load_image(name, colorkey=None, transforms=None):
+    # загружаем изображение
+
     fullname = os.path.join('data/im', name)
     # если файл не существует, то выходим
     if not os.path.isfile(fullname):
@@ -23,6 +20,7 @@ def load_image(name, colorkey=None, transforms=None):
         sys.exit()
     image = pygame.image.load(fullname)
 
+    # убираем фон
     if colorkey is not None:
         image = image.convert()
         if colorkey == -1:
@@ -31,12 +29,15 @@ def load_image(name, colorkey=None, transforms=None):
     else:
         image = image.convert_alpha()
 
+    # изменяем размер
     if transforms:
         image = pygame.transform.scale(image, transforms)
     return image
 
 
 def load_level(filename):
+    # загружает уровень
+
     filename = "data/maps/" + filename
     # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
@@ -51,13 +52,16 @@ def load_level(filename):
 
 
 def generate_level(level):
-    global all_sprites, tiles_group, turrets_group, place_group
+    # загрузка уровня
 
+    # очищаем группы спрайтов
+    global all_sprites, tiles_group, turrets_group, place_group
     all_sprites = pygame.sprite.Group()
     tiles_group = pygame.sprite.Group()
     turrets_group = pygame.sprite.Group()
     place_group = pygame.sprite.Group()
 
+    # обрабатываем файл и создаём карту
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] == '.':  # вид грязи
@@ -98,7 +102,7 @@ class Tile(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
 
 
-class Button(pygame.sprite.Sprite):  # класс кнопок
+class Button(pygame.sprite.Sprite):  # класс кнопок в магазине
     def __init__(self, x, y, image, scale, _type, products=None):
         super().__init__(button_sprites)
         self._type = _type
@@ -113,20 +117,23 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
         global button_sprites, clicked, product
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
+
+            # кнопка открытия меню магазина
             if self._type == 'shop':
                 product = self.product
                 button_sprites = pygame.sprite.Group()
-                # кнопка открытия меню магазина
                 clicked = True
                 music_click.play()
 
-            elif self._type == 'exit' or self._type == 'cancel':  # кнопка закрытия меню магазина
+            # кнопка закрытия меню магазина
+            elif self._type == 'exit' or self._type == 'cancel':
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, shop_image, 1, 'shop')
                 clicked = False
                 product = None
                 music_click.play()
 
+            # кнопка покупки
             elif self._type == 'buy':
                 button_sprites = pygame.sprite.Group()
                 Button(0, 0, cancel_image, 1, 'cancel')
@@ -135,6 +142,7 @@ class Button(pygame.sprite.Sprite):  # класс кнопок
                 music_click.play()
 
 
+# главная башня
 class Castle(pygame.sprite.Sprite):
     def __init__(self):
         self.hp = 10
@@ -145,7 +153,9 @@ class Castle(pygame.sprite.Sprite):
         self.rect.center = (650, 50)
 
     def take_damage(self, damage):
+        # отнимаем от жизней, урон врага
         self.hp -= damage
+        # если жизней не осталось, показываем экран поражения
         if self.hp <= 0:
             global losed
             losed = True
@@ -165,16 +175,21 @@ class Camera:
 
 
 def terminate():
+    # выходим из игры
     pygame.quit()
     sys.exit()
 
 
 def start_screen():
+    # стартовый экран
+
     intro_text = [" " * 6 + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     screen.blit(fon, (0, 0))
     text_coord = 450
+
+    # показываем текст
     for line in intro_text:
         string_rendered = font.render(line, 1, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()
@@ -195,8 +210,9 @@ def start_screen():
 
 
 def lose_screen():
+    # экран поражения
     global losed
-    intro_text = ['                     YOU LOSE',
+    intro_text = [" " * 22 + 'YOU LOSE',
                   '',
                   '',
                   '',
@@ -208,6 +224,8 @@ def lose_screen():
     text_coord = 150
     screen.blit(pygame.transform.scale(load_image('fon/losescreen.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT)),
                 (0, 0))
+
+    # показываем текст
     for line in intro_text:
         string_rendered = font.render(line, 1, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
@@ -218,7 +236,7 @@ def lose_screen():
         screen.blit(string_rendered, intro_rect)
 
 
-# группы спрайтов
+# создание групп спрайтов
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 turrets_group = pygame.sprite.Group()
@@ -230,12 +248,17 @@ castle = Castle()
 castle.hp = 10
 castle_group.add(castle)
 
+# записываем размеры одной клетки
 tile_width = tile_height = const.TILE_SIZE
 
 clicked = False
+losed = False
+onlose = False
+scoremenu = False
+flag_pause = False
 can_place_turr = None
 
-# подгрузка картинок шрифтов
+# загрузка картинок шрифтов
 font = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 30)
 font_time = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 15)
 font_min = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 25)
@@ -243,16 +266,17 @@ font_pause = pygame.font.Font('data/fonts/ofont.ru_Angeme.ttf', 50)
 font_healt_enemy = pygame.font.Font(None, 24)
 font_lose_screen = pygame.font.Font(None, 30)
 
-# подгрузка картинок кнопок
+# загрузка картинок кнопок
 shop_image = load_image('button/shopbutton.png', transforms=(tile_width * 1.7, tile_height))
 buy_tower_image = load_image('button/buytower.png', transforms=(tile_width * 1.7, tile_height))
 exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_height))
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
 
-# подгрузка музыки
+# загрузка музыки
 music_click = pygame.mixer.Sound("data/music/click_m.mp3")
 music_hooked = pygame.mixer.Sound("data/music/hooked_m.mp3")
 
+# создаём элементы из которых состоит меню паузы
 pause_image = pygame.Surface((WIDTH, HEIGHT))
 pause_image.fill((0, 0, 0))
 pause_image.set_colorkey((0, 0, 0))
@@ -260,6 +284,7 @@ pygame.draw.rect(pause_image, "grey", (0, 0, WIDTH, HEIGHT))
 pause_image.set_alpha(150)
 pause_text = font_pause.render("Пауза", 1, pygame.Color(0, 0, 0))
 
+# словарь с изображениями компонентов из которых состоит карта
 tile_images = {
     'wall': load_image('block/forest.png', transforms=(tile_width, tile_height)),
     'lake': load_image("block/lake.png", transforms=(tile_width, tile_height)),
@@ -274,4 +299,3 @@ product = None
 
 shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку
-

@@ -10,6 +10,7 @@ class Turret(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.name_turret = name_turret
 
+        # записываем начальные характеристики башни
         self.upgrade_level = 1
         self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                        transforms=(const.TILE_SIZE, const.TILE_SIZE))
@@ -21,6 +22,7 @@ class Turret(pygame.sprite.Sprite):
         self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
                                                      pygame.Color((0, 0, 0)))
 
+        # цель башни
         self.target = None
 
         self.rect = self.image.get_rect()
@@ -36,6 +38,7 @@ class Turret(pygame.sprite.Sprite):
         self.range_image = self.range_rect = None
         self.radius()
 
+        # True, если башня выбрана
         self.selected = False
 
     def update(self, enemy_group, surface):
@@ -53,7 +56,10 @@ class Turret(pygame.sprite.Sprite):
         self.missile_group.update()
 
     def draw(self, screen):
+        # рисуем башню
         screen.blit(self.image, self.rect)
+
+        # если выбрана, показываем радиус и стоимость улучшения
         if self.selected:
             screen.blit(self.range_image, self.range_rect)
             if self.upgrade_level != 5:
@@ -86,9 +92,15 @@ class Turret(pygame.sprite.Sprite):
         self.missile_group.add(missil)
 
     def upgrade(self):
+        # улучшает характеристики башни
+
+        # проверяем не максимальный ли сейчас уровень и хватает ли денег на улучшение
+
         if self.upgrade_level != 5:
             if const.MONEY >= self.cost_upgrade:
                 const.MONEY -= self.cost_upgrade
+
+                # повышаем характеристики башни
                 self.upgrade_level += 1
                 self.image = visual.load_image(const.TURRER[self.name_turret][self.upgrade_level - 1].get('im'),
                                                transforms=(const.TILE_SIZE, const.TILE_SIZE))
@@ -97,9 +109,11 @@ class Turret(pygame.sprite.Sprite):
                 self.damage = const.TURRER[self.name_turret][self.upgrade_level - 1].get("damage")
                 self.cost_upgrade = const.TURRER[self.name_turret][self.upgrade_level - 1].get("cost")
 
+                # изменяем визуальный радиус
                 self.radius()
 
 
+# башня, которая уничтожает врагов, находящихся в радиусе действия башни
 class Darkturret(Turret):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
