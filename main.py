@@ -22,7 +22,7 @@ def create_turret(x_pos, y_pos):
     return False
 
 
-def select_turret(x_pos, y_pos):
+def select_turret(x_pos, y_pos):  # проверяет наличие турели на клетке
     for tower in turret_group:
         if tower.rect.collidepoint((x_pos, y_pos)):
             if tower.selected:
@@ -80,7 +80,7 @@ def show_store():  # показывает магазин
         iteration += 1
 
 
-def start_game():
+def start_game():  # начало игры
     all_g, tiles_g, turret_g, place_g = visual.generate_visual()
     const.MONEY = 600
     camera.coord = 0
@@ -117,11 +117,15 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP and not visual.flag_pause:
             x, y = event.pos
 
+            # Смотрим если кликнули по магазину
+
             if (not create_turret(x, y) and visual.product == 'axe'
                     and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1):
 
+                # покупка топора
                 not_turret = True
 
+                # проверяем можно ли там поставить зону для турелей
                 for sprite in visual.dirt_group:
                     if sprite.rect.collidepoint((x, y)):
                         not_turret = False
@@ -130,21 +134,26 @@ while running:
                 if (x <= const.TILE_SIZE * 3 and y >= const.TILE_SIZE * 9) or (
                         x <= const.TILE_SIZE * 2 and y <= const.TILE_SIZE):
                     not_turret = False
+
                 if not_turret:
                     visual.button_sprites = pygame.sprite.Group()
                     visual.Button(0, 0, visual.shop_image, 1, 'shop')
 
                     const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
                     visual.product = None
+
+                    # проверяем стоит ли там турель, если да, то удаляем её
                     for towers in turret_group:
                         if towers.rect.collidepoint((x, y)):
                             towers.kill()
                             not_turret = False
 
+                    # ставим зону для турелей
                     if not_turret:
                         place = visual.Tile('gun', x // const.TILE_SIZE,
                                             y // const.TILE_SIZE, place_group, all_sprites)
 
+            # покупка турели
             elif create_turret(x, y) and visual.product and visual.product != 'axe' and const.MONEY - \
                     const.TURRER[visual.product][0].get(
                         'buy_cost') >= 0 and event.button == 1:
@@ -161,11 +170,14 @@ while running:
                     new_turret = t.Turret(x // const.TILE_SIZE * const.TILE_SIZE,
                                           y // const.TILE_SIZE * const.TILE_SIZE,
                                           visual.product)
+
+                # добавляем турель в группу
                 turret_group.add(new_turret)
                 all_sprites.add(new_turret)
 
                 visual.product = None
-            # показываем радиус
+
+            # Если кликнули по башне, показываем радиус
             else:
                 selected_turret = select_turret(x, y)
                 if event.button == 3 and selected_turret:
@@ -188,12 +200,18 @@ while running:
                     visual.losed = False
 
         # ----------------------------
-        #          Кнопки
+        #      Кнопки клавиатуры
         # ----------------------------
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and not visual.flag_pause:
+
+            # Чит на деньги
+
+            if event.key == pygame.K_UP and event.mod & pygame.KMOD_SHIFT and not visual.flag_pause:
                 const.MONEY += 1000
+
+            # Рестарт
+
             elif event.key == pygame.K_DOWN and not visual.flag_pause and visual.losed:
                 running = menu.menu(screen)
                 if running:
@@ -201,6 +219,9 @@ while running:
                      place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
                 if visual.losed:
                     visual.losed = False
+
+            # Движение камеры
+
             elif event.key == pygame.K_LEFT and not visual.flag_pause:
                 if 0 <= camera.coord - const.TILE_SIZE <= camera.field_size_x:
                     visual.castle.rect.x += const.TILE_SIZE
@@ -211,6 +232,7 @@ while running:
                         turret.range_rect.x += 50
                         for missile in turret.missile_group:
                             missile.rect.x += 50
+
             elif event.key == pygame.K_RIGHT and not visual.flag_pause:
                 if 0 <= camera.coord + const.TILE_SIZE <= camera.field_size_x:
                     visual.castle.rect.x -= const.TILE_SIZE
@@ -221,6 +243,9 @@ while running:
                         turret.range_rect.x -= 50
                         for missile in turret.missile_group:
                             missile.rect.x -= 50
+
+            # Пауза
+
             elif event.key == pygame.K_ESCAPE:
                 # меняем флаг паузы на противоположный
                 visual.flag_pause = not visual.flag_pause
