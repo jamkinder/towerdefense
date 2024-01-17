@@ -174,7 +174,9 @@ TURRER = {'usual': [
             'cost': 400
         }],
     'axe': [{'im': 'axe.png',
-             'buy_cost': 100}]
+             'buy_cost': 100}],
+    'alpha': [{'im':'boost_icons/alphaboost.png',
+               'buy_cost':200}]
 }
 
 HINTS = ['hints/defaulttower.png',
