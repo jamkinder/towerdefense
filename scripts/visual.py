@@ -157,6 +157,9 @@ class Castle(pygame.sprite.Sprite):
         self.hp -= damage
         # если жизней не осталось, показываем экран поражения
         if self.hp <= 0:
+            music_fon_game.stop()
+            music_lose.play(-1)
+
             global losed
             losed = True
             lose_screen()
@@ -205,6 +208,7 @@ def start_screen():
                 terminate()
             elif event.type == pygame.KEYDOWN or \
                     event.type == pygame.MOUSEBUTTONDOWN:
+                music_fon_game.play(-1)
                 return  # начинаем игру
         pygame.display.flip()
 
@@ -273,8 +277,20 @@ exit_image = load_image('button/exit.png', transforms=(tile_width * 1.7, tile_he
 cancel_image = load_image('button/cancel.png', transforms=(tile_width * 1.5, tile_height))
 
 # загрузка музыки
-music_click = pygame.mixer.Sound("data/music/click_m.mp3")
-music_hooked = pygame.mixer.Sound("data/music/hooked_m.mp3")
+music_click = pygame.mixer.Sound("data/music/click_m.wav")
+music_hooked = pygame.mixer.Sound("data/music/hooked_m.wav")
+music_fon_menu = pygame.mixer.Sound("data/music/fon_m.wav")
+music_fon_pause = pygame.mixer.Sound("data/music/fon_pause_m.wav")
+music_fon_game = pygame.mixer.Sound("data/music/fon_game_m.wav")
+music_up = pygame.mixer.Sound("data/music/up_m.wav")
+music_destruction = pygame.mixer.Sound("data/music/destruction_m.wav")
+music_lose = pygame.mixer.Sound("data/music/lose_m.wav")
+
+# меняем громкость музыки
+music_fon_menu.set_volume(0.2)
+music_fon_pause.set_volume(0.2)
+music_destruction.set_volume(0.5)
+music_fon_game.set_volume(0.1)
 
 # создаём элементы из которых состоит меню паузы
 pause_image = pygame.Surface((WIDTH, HEIGHT))
@@ -297,5 +313,5 @@ tile_images = {
 
 product = None
 
-shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.5))
+shop_menu_image = load_image('fon/shopram.png', transforms=(tile_width * 4 + 110, tile_height * 8.8))
 Button(0, 0, shop_image, 1, 'shop')  # создаем shop кнопку

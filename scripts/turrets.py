@@ -22,6 +22,8 @@ class Turret(pygame.sprite.Sprite):
         self.hints_upgrade = visual.font_time.render('upgrade ' + str(self.cost_upgrade), 1,
                                                      pygame.Color((0, 0, 0)))
 
+        self.additional_damage = 1
+
         # цель башни
         self.target = None
 
@@ -88,7 +90,7 @@ class Turret(pygame.sprite.Sprite):
     def attack(self):
         # создаёт снаряд
         missil = missile.Missile(visual.load_image('arrow.png', colorkey=-1), self.target,
-                                 (self.rect.x, self.rect.y), self.damage)
+                                 (self.rect.x, self.rect.y), self.damage * self.additional_damage)
         self.missile_group.add(missil)
 
     def upgrade(self):
@@ -98,6 +100,8 @@ class Turret(pygame.sprite.Sprite):
 
         if self.upgrade_level != 5:
             if const.MONEY >= self.cost_upgrade:
+                visual.music_up.play()
+
                 const.MONEY -= self.cost_upgrade
 
                 # повышаем характеристики башни
@@ -136,6 +140,8 @@ class Darkturret(Turret):
     def upgrade(self):
         if self.upgrade_level != 3:
             if const.MONEY >= self.cost_upgrade:
+                visual.music_up.play()
+
                 const.MONEY -= self.cost_upgrade
                 self.upgrade_level += 1
 
