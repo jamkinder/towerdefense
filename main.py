@@ -107,6 +107,8 @@ if running:
 
 selected_turret = None
 
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна

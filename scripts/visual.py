@@ -141,6 +141,16 @@ class Button(pygame.sprite.Sprite):  # класс кнопок в магазин
                 clicked = False
                 music_click.play()
 
+def fade(width, height):
+    fade = pygame.Surface((width, height))
+    fade.fill((0,0,0))
+    for alpha in range(0, 155):
+        fade.set_alpha(alpha)
+        screen.blit(fade, (0,0))
+        pygame.display.update()
+        pygame.time.delay(0)
+
+
 
 # главная башня
 class Castle(pygame.sprite.Sprite):
@@ -155,9 +165,12 @@ class Castle(pygame.sprite.Sprite):
     def take_damage(self, damage):
         # отнимаем от жизней, урон врага
         self.hp -= damage
+        fade(500, 500)
+        music_destruction.play()
         # если жизней не осталось, показываем экран поражения
         if self.hp <= 0:
             music_fon_game.stop()
+
             music_lose.play(-1)
 
             global losed
@@ -185,7 +198,6 @@ def terminate():
 
 def start_screen():
     # стартовый экран
-
     intro_text = [" " * 6 + "Press any button to start game"]
 
     fon = pygame.transform.scale(load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
