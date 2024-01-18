@@ -3,7 +3,6 @@ from scripts import visual
 from scripts import enemyspawnerData
 from scripts import constants as const
 
-
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, rect):
         self.healt_img = visual.font_healt_enemy.render('', True, 'BLUE')
@@ -49,7 +48,9 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         # если у enemy сняли все жизни
         if self.healt <= 0:
+            death_sound = pygame.mixer.Sound('data/music/death.wav')
             const.MONEY += const.KILL_REWARD
+            death_sound.play()
             self.kill()
         else:
             # показываем здоровье врагов

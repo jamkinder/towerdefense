@@ -286,6 +286,7 @@ music_up = pygame.mixer.Sound("data/music/up_m.wav")
 music_destruction = pygame.mixer.Sound("data/music/destruction_m.wav")
 music_lose = pygame.mixer.Sound("data/music/lose_m.wav")
 
+
 # меняем громкость музыки
 music_fon_menu.set_volume(0.2)
 music_fon_pause.set_volume(0.2)
