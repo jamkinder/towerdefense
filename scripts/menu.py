@@ -5,6 +5,7 @@ from scripts import constants as const
 
 def menu(surface):
     # создаём рамку кнопок
+    visual.music_fon_menu.play(-1)
     image_button = visual.load_image('fon/cantbuy.png', transforms=(150, 75))
     # создаём фон
     fon = pygame.transform.scale(visual.load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))

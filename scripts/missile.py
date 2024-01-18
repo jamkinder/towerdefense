@@ -3,6 +3,10 @@ import math
 import random
 from scripts import constants as const
 
+pygame.mixer.init()
+music_damage = pygame.mixer.Sound("data/music/damage_m.mp3")
+music_damage.set_volume(0.5)
+
 
 class Missile(pygame.sprite.Sprite):
     def __init__(self, image, target, pos, damage):
@@ -41,6 +45,7 @@ class Missile(pygame.sprite.Sprite):
                 (self.target.rect.x - self.pos[0] > 0 and self.target.rect.x - self.rect.x - self.rect[2] > 0) or (
                 (self.target.rect.x - self.pos[0] < 0 and self.target.rect.x - self.rect.x + self.rect[2] < 0))):
 
+            music_damage.play()
             # шанс крита
             if random.randint(0, 50) % 10 == 0:
                 self.target.healt -= self.damage

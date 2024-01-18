@@ -43,8 +43,8 @@ def spawn_enemyes():  # функция спавна врагов
         enemy_group.add(enemys)
         all_sprites.add(enemys)
 
-    for j in range(20, -sum(enemyspawnerData.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
-        enemys = enemycontrols.Enemy(360 - camera.coord, j,
+    for i in range(20, -sum(enemyspawnerData.WAVES.get(str(1))) // 2 * const.TILE_SIZE, -const.TILE_SIZE):
+        enemys = enemycontrols.Enemy(360 - camera.coord, i,
                                      visual.load_image(r"enemies\s_walk_blue.png", transforms=(300, 50)), 6, 1,
                                      tiles_group, visual.castle_group, 2, visual.load_image('mar.png').get_rect())
         enemy_group.add(enemys)
@@ -71,7 +71,7 @@ def show_store():  # показывает магазин
                     (15, 60 + 65 * iteration))
         visual.Button(83, 60 + 60 * iteration, visual.buy_tower_image, 1, 'buy', products=tower)
         iteration += 1
-    visual.Button(visual.tile_width * 4 + 8, 60 + 60 * iteration, visual.exit_image, 1, 'exit')
+    visual.Button(visual.tile_width * 4, HEIGHT - visual.tile_height - 5, visual.exit_image, 1, 'exit')
 
     iteration = 0
     for hints in const.HINTS:
@@ -85,6 +85,8 @@ def start_game():  # начало игры
     const.MONEY = 600
     camera.coord = 0
     enemyspawnerData.WAVES = {'1': [1, 0]}
+    visual.music_lose.stop()
+    visual.music_fon_menu.stop()
     return all_g, tiles_g, turret_g, place_g, pygame.sprite.Group(), 0, -1, 20
 
 
@@ -99,7 +101,6 @@ running = menu.menu(screen)
 clock = pygame.time.Clock()
 FPS = const.FPS
 counter = 30
-timer_event = pygame.USEREVENT+1
 if running:
     all_sprites, tiles_group, turret_group, place_group, \
         enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
@@ -114,31 +115,28 @@ while running:
         # ----------------------------
         #           Клики
         # ----------------------------
-        elif event.type == timer_event:
-            counter -= 1
-            print(counter)
-            if counter == 0:
-                print('1')
-                pygame.time.set_timer(timer_event, 0)
-                for elem in const.TURRER:
-                    for j in const.TURRER.get(elem):
-                        if j.get('damage') != None:
-                            print(j['damage'], 'before')
-                            j['damage'] /= 1.5
-                            print(j['damage'], 'affter')
 
         if event.type == pygame.MOUSEBUTTONUP and not visual.flag_pause:
             x, y = event.pos
 
             # Смотрим если кликнули по магазину
-            if not create_turret(x, y) and visual.product == 'alpha' and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1:
-                not_turret = True
-                if not_turret:
-                    visual.button_sprites = pygame.sprite.Group()
-                    visual.Button(0, 0, visual.shop_image, 1, 'shop')
+            if (visual.product == 'alpha' and const.MONEY - const.TURRER[visual.product][0].get(
+                    'buy_cost') >= 0 and event.button == 1 and select_turret(x, y)):
+                visual.button_sprites = pygame.sprite.Group()
+                visual.Button(0, 0, visual.shop_image, 1, 'shop')
 
-                    const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
-                    visual.product = None
+                visual.button_sprites = pygame.sprite.Group()
+                visual.Button(0, 0, visual.shop_image, 1, 'shop')
+
+                const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
+
+                turret_additional_damage = select_turret(x, y)
+                turret_additional_damage.additional_damage += 0.2
+
+                visual.product = None
+
+                visual.music_up.play()
+
             if (not create_turret(x, y) and visual.product == 'axe'
                     and const.MONEY - const.TURRER[visual.product][0].get('buy_cost') >= 0 and event.button == 1):
 
@@ -173,10 +171,12 @@ while running:
                         place = visual.Tile('gun', x // const.TILE_SIZE,
                                             y // const.TILE_SIZE, place_group, all_sprites)
 
+                    visual.music_destruction.play()
+
             # покупка турели
-            elif create_turret(x, y) and visual.product and visual.product != 'axe' and visual.product != 'alpha' and const.MONEY - \
-                    const.TURRER[visual.product][0].get(
-                        'buy_cost') >= 0 and event.button == 1:
+            elif (create_turret(x, y) and visual.product and visual.product != 'axe'
+                  and visual.product != 'alpha' and const.MONEY - const.TURRER[visual.product][0].get(
+                        'buy_cost') >= 0 and event.button == 1):
                 visual.button_sprites = pygame.sprite.Group()
                 visual.Button(0, 0, visual.shop_image, 1, 'shop')
                 const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
@@ -200,6 +200,8 @@ while running:
             # Если кликнули по башне, показываем радиус
             else:
                 selected_turret = select_turret(x, y)
+
+                # улучшаем башню
                 if event.button == 3 and selected_turret:
                     selected_turret.upgrade()
                     selected_turret = None
@@ -209,6 +211,8 @@ while running:
         # отслеживание кликов в паузе
         if event.type == pygame.MOUSEBUTTONUP and visual.flag_pause:
             x, y = event.pos
+            visual.music_fon_pause.stop()
+
             if 160 <= x <= 360 and 275 <= y <= 350:
                 visual.music_click.play()
                 visual.flag_pause = False
@@ -233,12 +237,14 @@ while running:
             # Рестарт
 
             elif event.key == pygame.K_DOWN and not visual.flag_pause and visual.losed:
+                visual.music_lose.stop()
+                visual.losed = False
+
                 running = menu.menu(screen)
+
                 if running:
                     (all_sprites, tiles_group, turret_group,
                      place_group, enemy_group, totalwave, time_the_next_wave, pluscoof) = start_game()
-                if visual.losed:
-                    visual.losed = False
 
             # Движение камеры
 
@@ -269,6 +275,15 @@ while running:
             elif event.key == pygame.K_ESCAPE:
                 # меняем флаг паузы на противоположный
                 visual.flag_pause = not visual.flag_pause
+
+                # включаем фоновую музыку
+                if visual.flag_pause:
+                    visual.music_fon_pause.play(-1)
+                    visual.music_fon_game.stop()
+                else:
+                    visual.music_fon_pause.stop()
+                    visual.music_fon_game.play(-1)
+
                 # создаём меню паузы
                 screen.blit(visual.pause_image, (0, 0))
                 screen.blit(visual.pause_text,
@@ -303,20 +318,6 @@ while running:
 
         # если пользователь выбрал товар, рисуем его около курсора
         if visual.product:
-            if visual.product == 'alpha':
-                visual.button_sprites = pygame.sprite.Group()
-                visual.Button(0, 0, visual.shop_image, 1, 'shop')
-
-                const.MONEY -= const.TURRER[visual.product][0].get('buy_cost')
-
-                visual.product = None
-                for elem in const.TURRER:
-                    for j in const.TURRER.get(elem):
-                        if j.get('damage') != None:
-                            print(j['damage'],'before')
-                            j['damage'] *= 1.5
-                            print(j['damage'],'affter')
-                pygame.time.set_timer(timer_event, 1000)
             mouse_pos = pygame.mouse.get_pos()
             if visual.product:
                 screen.blit(visual.load_image(const.TURRER[visual.product][0].get('im'), transforms=(50, 50)),
@@ -345,8 +346,8 @@ while running:
             if time_the_next_wave:
                 # получаем время, через сколько будет волна и выводим его
                 str_time = round(2 - float(str(abs(time_the_next_wave - pygame.time.get_ticks()) / 1000)[:3]), 1)
-                time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, (0, 0, 0))
-                screen.blit(time, (200, const.SCREEN_HEIGHT - 20))
+                time = visual.font_time.render(f'Следующая волна через: {str_time}s', True, (255, 255, 255))
+                screen.blit(time, (300, const.SCREEN_HEIGHT - 20))
 
                 # елси прошло достаточно времени с предыдущей волны
                 if (time_the_next_wave == -1 or pygame.time.get_ticks() - time_the_next_wave >=
@@ -379,6 +380,7 @@ while running:
                 time_the_next_wave = pygame.time.get_ticks()
 
         if visual.losed:
+            enemy_group = pygame.sprite.Group()
             visual.lose_screen()
 
     # обновляем экран
