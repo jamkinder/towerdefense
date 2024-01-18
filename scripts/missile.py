@@ -5,7 +5,7 @@ from scripts import constants as const
 
 pygame.mixer.init()
 music_damage = pygame.mixer.Sound("data/music/damage_m.wav")
-music_damage.set_volume(0.25)
+music_damage.set_volume(0.1)
 
 
 class Missile(pygame.sprite.Sprite):
