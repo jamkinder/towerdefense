@@ -46,6 +46,7 @@ def menu(surface):
                 elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
                         and (const.SCREEN_HEIGHT // 2 - 5) * 1.6 <= y <= (
                                     const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu:
+                    settingsmenu = False
                     visual.music_fon_menu.stop()
                     running = menu(surface)
 
