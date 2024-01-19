@@ -52,6 +52,7 @@ def menu(surface):
 
         # показываем фон
         surface.blit(fon, (0, 0))
+        # отдельная отрисовка меню настроек
         if settingsmenu:
             surface.fill('white')
             myimage = pygame.image.load("data/im/guide/guide2.png")
@@ -80,7 +81,7 @@ def menu(surface):
 
 
 
-        # показываем кнопки
+        # показываем кнопки и все остальное
         if not settingsmenu:
             for i in range(len(text_button)):
                 x, y = pygame.mouse.get_pos()
