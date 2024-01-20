@@ -312,7 +312,7 @@ pause_image.fill((255, 255, 255))
 pause_image.set_colorkey((255, 255, 255))
 pygame.draw.rect(pause_image, "black", (0, 0, WIDTH, HEIGHT))
 pause_image.set_alpha(150)
-pause_text = font_pause.render("Пауза", 1, pygame.Color(0, 0, 0))
+pause_text = font_pause.render("Пауза", 1, pygame.Color(255, 255, 255))
 
 # словарь с изображениями компонентов из которых состоит карта
 tile_images = {

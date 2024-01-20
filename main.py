@@ -294,7 +294,7 @@ while running:
                 screen.blit(visual.pause_text,
                             (const.SCREEN_WIDTH // 2 - const.TILE_SIZE, const.SCREEN_HEIGHT // 2 - const.TILE_SIZE))
                 screen.blit(visual.load_image('fon/cantbuy.png', transforms=(200, 75)), (160, 275))
-                screen.blit(visual.font_text.render('Выйти в меню', 1, pygame.Color('black')), (190, 300))
+                screen.blit(visual.font_text.render('Выйти в меню', 1, pygame.Color((255, 255, 255))), (190, 300))
 
     # если сейчас не пауза
     if not visual.flag_pause:

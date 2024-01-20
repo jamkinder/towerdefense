@@ -1,6 +1,7 @@
 import pygame
 from scripts import visual
 from scripts import constants as const
+from webbrowser import open
 
 
 def menu(surface):
@@ -24,7 +25,7 @@ def menu(surface):
                           visual.font_text_min.render('Справка', 1, pygame.Color('black'))]
 
     hooked = False  # если навелись на кнопку
-    settingsmenu = False
+    # settingsmenu = False
     running = True
     while running:
         for event in pygame.event.get():
@@ -36,21 +37,21 @@ def menu(surface):
                 x, y = event.pos
                 # если кликнули по кнопке начать, начинаем игру
                 if ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                     and const.SCREEN_HEIGHT // 2 <= y <= const.SCREEN_HEIGHT // 2 + size_button[1])
-                        and not settingsmenu):
+                     and const.SCREEN_HEIGHT // 2 <= y <= const.SCREEN_HEIGHT // 2 + size_button[1])):
                     visual.music_click.play()
                     return True
                 # если кликнули по кнопке выйти, заканчиваем игру
                 elif ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
                        and const.SCREEN_HEIGHT // 2 * (1 + kooficent_indent_y) <= y <= const.SCREEN_HEIGHT // 2 * (
-                               1 + kooficent_indent_y) + size_button[1]) and not settingsmenu):
+                               1 + kooficent_indent_y) + size_button[1])):
                     return False
                 # если кликнули по кнопке, то открываем меню настроек
                 elif ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
                        and const.SCREEN_HEIGHT // 2 * (1 + kooficent_indent_y * 2) <= y <= const.SCREEN_HEIGHT // 2 * (
-                               1 + kooficent_indent_y * 2) + size_button[1]) and not settingsmenu):
-                    surface.fill('white')
-                    settingsmenu = True
+                               1 + kooficent_indent_y * 2) + size_button[1])):
+                    open('https://github.com/jamkinder/towerdefense/blob/test/README.md')
+                    # surface.fill('white')
+                    # settingsmenu = True
                 # elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
                 #       and (const.SCREEN_HEIGHT // 2 - 5) * 1.6 <= y <= (
                 #               const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu:
@@ -88,37 +89,37 @@ def menu(surface):
         #                 hooked = False
 
         # показываем кнопки и все остальное
-        if not settingsmenu:
-            for i in range(len(text_button)):
-                x, y = pygame.mouse.get_pos()
-                surface.blit(image_button,
-                             (const.SCREEN_WIDTH // 2 - indent_x,
-                              const.SCREEN_WIDTH // 2 * (1 + i * kooficent_indent_y)))
+        # if not settingsmenu:
+        for i in range(len(text_button)):
+            x, y = pygame.mouse.get_pos()
+            surface.blit(image_button,
+                         (const.SCREEN_WIDTH // 2 - indent_x,
+                          const.SCREEN_WIDTH // 2 * (1 + i * kooficent_indent_y)))
 
-                # если навелись на кнопку, то изменяем её размер
-                if (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                        and (const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) <= y <= (
-                                const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) + size_button[1]):
-                    surface.blit(active_text_button[i],
-                                 (const.SCREEN_WIDTH // 2 - indent_x // 2 + 5,
-                                  (const.SCREEN_HEIGHT // 2 + 15) * (1 + i * kooficent_indent_y)))
+            # если навелись на кнопку, то изменяем её размер
+            if (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
+                    and (const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) <= y <= (
+                            const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) + size_button[1]):
+                surface.blit(active_text_button[i],
+                             (const.SCREEN_WIDTH // 2 - indent_x // 2 + 5,
+                              (const.SCREEN_HEIGHT // 2 + 15) * (1 + i * kooficent_indent_y)))
 
-                    if not hooked:
-                        visual.music_hooked.play()
-                        hooked = True
-                else:
-                    surface.blit(text_button[i],
-                                 (const.SCREEN_WIDTH // 2 - indent_x // 2,
-                                  (const.SCREEN_HEIGHT // 2 + 10) * (1 + i * kooficent_indent_y)))
+                if not hooked:
+                    visual.music_hooked.play()
+                    hooked = True
+            else:
+                surface.blit(text_button[i],
+                             (const.SCREEN_WIDTH // 2 - indent_x // 2,
+                              (const.SCREEN_HEIGHT // 2 + 10) * (1 + i * kooficent_indent_y)))
 
-                    if not (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[
-                        0] and
-                            (((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                    const.SCREEN_HEIGHT // 2) * 1 + size_button[1]) or
-                             ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                     const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y) + kooficent_indent_y +
-                              size_button[1]) or
-                             ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                     const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y * 2) + size_button[1]))):
-                        hooked = False
+                if not (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[
+                    0] and
+                        (((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
+                                const.SCREEN_HEIGHT // 2) * 1 + size_button[1]) or
+                         ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
+                                 const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y) + kooficent_indent_y +
+                          size_button[1]) or
+                         ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
+                                 const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y * 2) + size_button[1]))):
+                    hooked = False
         pygame.display.flip()
