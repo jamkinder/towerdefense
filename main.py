@@ -107,8 +107,6 @@ if running:
 
 selected_turret = None
 
-
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:  # при закрытии окна
@@ -231,10 +229,15 @@ while running:
 
         if event.type == pygame.KEYDOWN:
 
-            # Чит на деньги
+            # Читы
 
-            if event.key == pygame.K_UP and event.mod & pygame.KMOD_SHIFT and not visual.flag_pause:
+            if (event.key == pygame.K_UP and event.mod & pygame.KMOD_SHIFT
+                    and event.mod & pygame.KMOD_CAPS and not visual.flag_pause):
                 const.MONEY += 1000
+            elif (event.key == pygame.K_k and event.mod & pygame.KMOD_SHIFT
+                    and event.mod & pygame.KMOD_CAPS and not visual.flag_pause):
+                for enemy in enemy_group:
+                    enemy.kill()
 
             # Рестарт
 
