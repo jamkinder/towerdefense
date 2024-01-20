@@ -103,13 +103,13 @@ def menu(surface):
                                  (const.SCREEN_WIDTH // 2 - 38, (const.SCREEN_WIDTH // 2 + 10) * (1 + i * 0.35)))
 
                     if (not (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                             and (const.SCREEN_HEIGHT // 2) <= y <= (const.SCREEN_HEIGHT // 2) + 75)
+                             and (const.SCREEN_HEIGHT // 2) <= y <= (const.SCREEN_HEIGHT // 2) + size_button[1])
                             and not (
                                     const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150 and
-                                    (const.SCREEN_HEIGHT // 2) * 1.5 <= y <= (
-                                            const.SCREEN_HEIGHT // 2) * 1.5 + 75) and not (
+                                    (const.SCREEN_HEIGHT // 2) * 1.35 <= y <= (
+                                            const.SCREEN_HEIGHT // 2) * 1.35 + size_button[1]) and not (
                                     const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150 and
-                                    (const.SCREEN_HEIGHT // 2) * 1.8 <= y <= (
-                                            const.SCREEN_HEIGHT // 2) * 1.8 + 75)):
+                                    (const.SCREEN_HEIGHT // 2) * 1.7 <= y <= (
+                                            const.SCREEN_HEIGHT // 2) * 1.7 + size_button[1])):
                         hooked = False
         pygame.display.flip()
