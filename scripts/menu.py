@@ -2,21 +2,22 @@ import pygame
 from scripts import visual
 from scripts import constants as const
 
-def menu(surface):
 
+def menu(surface):
     # создаём рамку кнопок
 
     visual.music_fon_menu.play(-1)
-    image_button = visual.load_image('fon/cantbuy.png', transforms=(150, 75))
+    size_button = (150, 60)
+    image_button = visual.load_image('fon/cantbuy.png', transforms=size_button)
     # создаём фон
     fon = pygame.transform.scale(visual.load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
     # записываем текст кнопок
     text_button = [visual.font.render('Играть', 1, pygame.Color('black')),
                    visual.font.render('Выйти', 1, pygame.Color('black')),
-                   visual.font.render('Настройки', 1, pygame.Color('black'))]
-    active_text_button = [visual.font_min.render('Играть', 1, pygame.Color('black')),
-                          visual.font_min.render('Выйти', 1, pygame.Color('black')),
-                          visual.font_min.render('Настройки ', 1, pygame.Color('black'))]
+                   visual.font_text.render('Справка', 1, pygame.Color('black'))]
+    active_text_button = [visual.font_text.render('Играть', 1, pygame.Color('black')),
+                          visual.font_text.render('Выйти', 1, pygame.Color('black')),
+                          visual.font_text_min.render('Справка', 1, pygame.Color('black'))]
 
     hooked = False  # если навелись на кнопку
     settingsmenu = False
@@ -31,25 +32,26 @@ def menu(surface):
                 x, y = event.pos
                 # если кликнули по кнопке начать, начинаем игру
                 if (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                        and const.SCREEN_HEIGHT // 2 - 35 <= y <= const.SCREEN_HEIGHT // 2 + 55) and settingsmenu == False:
+                    and const.SCREEN_HEIGHT // 2 - 35 <= y <= const.SCREEN_HEIGHT // 2 + 55) and settingsmenu == False:
                     visual.music_click.play()
                     return True
                 # если кликнули по кнопке выйти, заканчиваем игру
                 elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                      and (const.SCREEN_HEIGHT // 2 - 25) * 1.5 <= y <= (const.SCREEN_HEIGHT // 2 - 20) * 1.5 + 75) and settingsmenu == False:
+                      and (const.SCREEN_HEIGHT // 2 - 25) * 1.5 <= y <= (
+                              const.SCREEN_HEIGHT // 2 - 20) * 1.5 + 75) and settingsmenu == False:
                     return False
                 # если кликнули по кнопке то открываем меню настроек
                 elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                        and (const.SCREEN_HEIGHT // 2 - 5) * 1.8 <= y <= (const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu == False:
+                      and (const.SCREEN_HEIGHT // 2 - 5) * 1.8 <= y <= (
+                              const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu == False:
                     surface.fill('white')
                     settingsmenu = True
                 elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                        and (const.SCREEN_HEIGHT // 2 - 5) * 1.6 <= y <= (
-                                    const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu:
+                      and (const.SCREEN_HEIGHT // 2 - 5) * 1.6 <= y <= (
+                              const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu:
                     settingsmenu = False
                     visual.music_fon_menu.stop()
                     running = menu(surface)
-
 
         # показываем фон
         surface.blit(fon, (0, 0))
@@ -58,7 +60,7 @@ def menu(surface):
             surface.fill('white')
             myimage = pygame.image.load("data/im/guide/guide2.png")
             imagerect = myimage.get_rect()
-            surface.blit(myimage, (0,0,400,300))
+            surface.blit(myimage, (0, 0, 400, 300))
             text_ = [visual.font.render('Back', 1, pygame.Color('black'))]
             for i in range(len(text_)):
                 x, y = pygame.mouse.get_pos()
@@ -80,36 +82,34 @@ def menu(surface):
                              and (const.SCREEN_HEIGHT // 2 - 20) <= y <= (const.SCREEN_HEIGHT // 2 - 20) + 75)):
                         hooked = False
 
-
-
         # показываем кнопки и все остальное
         if not settingsmenu:
             for i in range(len(text_button)):
                 x, y = pygame.mouse.get_pos()
-                surface.blit(image_button, (const.SCREEN_WIDTH // 2 - 70, 218 * (1 + i * 0.5)))
+                surface.blit(image_button, (const.SCREEN_WIDTH // 2 - 70, const.SCREEN_WIDTH // 2 * (1 + i * 0.35)))
 
                 # если навелись на кнопку, то изменяем её размер
-                if (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                        and (const.SCREEN_HEIGHT // 2 - 20) * (1 + i * 0.5) <= y <= (
-                                const.SCREEN_HEIGHT // 2 - 20) * (1 + i * 0.5) + 75):
+                if (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + size_button[0]
+                        and (const.SCREEN_HEIGHT // 2) * (1 + i * 0.35) <= y <= (
+                                const.SCREEN_HEIGHT // 2) * (1 + i * 0.35) + size_button[1]):
                     surface.blit(active_text_button[i],
-                                 (const.SCREEN_WIDTH // 2 - 30, const.SCREEN_WIDTH // 2 * (1 + i * 0.45) + 5))
+                                 (const.SCREEN_WIDTH // 2 - 33, (const.SCREEN_WIDTH // 2 + 15) * (1 + i * 0.35)))
 
                     if not hooked:
                         visual.music_hooked.play()
                         hooked = True
                 else:
-                    surface.blit(text_button[i], (const.SCREEN_WIDTH // 2 - 35, const.SCREEN_WIDTH // 2.1 * (1 + i * 0.45)))
+                    surface.blit(text_button[i],
+                                 (const.SCREEN_WIDTH // 2 - 38, (const.SCREEN_WIDTH // 2 + 10) * (1 + i * 0.35)))
 
                     if (not (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                             and (const.SCREEN_HEIGHT // 2 - 20) <= y <= (const.SCREEN_HEIGHT // 2 - 20) + 75)
+                             and (const.SCREEN_HEIGHT // 2) <= y <= (const.SCREEN_HEIGHT // 2) + 75)
                             and not (
                                     const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150 and
-                                    (const.SCREEN_HEIGHT // 2 - 20) * 1.5 <= y <= (
-                                            const.SCREEN_HEIGHT // 2 - 20) * 1.5 + 75)\
-                            and not (
+                                    (const.SCREEN_HEIGHT // 2) * 1.5 <= y <= (
+                                            const.SCREEN_HEIGHT // 2) * 1.5 + 75) and not (
                                     const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150 and
-                                    (const.SCREEN_HEIGHT // 2 - 10) * 1.8 <= y <= (
-                                            const.SCREEN_HEIGHT // 2 - 10) * 1.8 + 75)):
+                                    (const.SCREEN_HEIGHT // 2) * 1.8 <= y <= (
+                                            const.SCREEN_HEIGHT // 2) * 1.8 + 75)):
                         hooked = False
         pygame.display.flip()
