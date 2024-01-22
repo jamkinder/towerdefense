@@ -93,6 +93,9 @@ def start_game():  # начало игры
 pygame.init()
 size = WIDTH, HEIGHT = const.SCREEN_WIDTH, const.SCREEN_HEIGHT
 screen = pygame.display.set_mode(size)
+pygame_icon = pygame.image.load('data/icon.ico')
+pygame.display.set_icon(pygame_icon)
+pygame.display.set_caption('Tower Defense')
 
 camera = visual.Camera(15)
 
@@ -106,8 +109,6 @@ if running:
         enemy_group, totalwave, time_the_next_wave, pluscoof = start_game()
 
 selected_turret = None
-
-
 
 while running:
     for event in pygame.event.get():
@@ -231,10 +232,15 @@ while running:
 
         if event.type == pygame.KEYDOWN:
 
-            # Чит на деньги
+            # Читы
 
-            if event.key == pygame.K_UP and event.mod & pygame.KMOD_SHIFT and not visual.flag_pause:
+            if (event.key == pygame.K_UP and event.mod & pygame.KMOD_SHIFT
+                    and event.mod & pygame.KMOD_CAPS and not visual.flag_pause):
                 const.MONEY += 1000
+            elif (event.key == pygame.K_k and event.mod & pygame.KMOD_SHIFT
+                    and event.mod & pygame.KMOD_CAPS and not visual.flag_pause):
+                for enemy in enemy_group:
+                    enemy.kill()
 
             # Рестарт
 
@@ -291,7 +297,7 @@ while running:
                 screen.blit(visual.pause_text,
                             (const.SCREEN_WIDTH // 2 - const.TILE_SIZE, const.SCREEN_HEIGHT // 2 - const.TILE_SIZE))
                 screen.blit(visual.load_image('fon/cantbuy.png', transforms=(200, 75)), (160, 275))
-                screen.blit(visual.font_min.render('Выйти в меню', 1, pygame.Color('black')), (190, 300))
+                screen.blit(visual.font_text.render('Выйти в меню', 1, pygame.Color((255, 255, 255))), (190, 300))
 
     # если сейчас не пауза
     if not visual.flag_pause:
@@ -331,7 +337,7 @@ while running:
         # создаём отображение волны, денег, и здоровья главной башни
         visual.img = visual.font.render('Money: ' + str(const.MONEY), True, (255, 36, 0))
         visual.imgcastle = visual.font.render(str(visual.castle.hp), True, (203, 40, 33))
-        visual.wavetext = visual.font_min.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
+        visual.wavetext = visual.font_text.render('ВОЛНА: ' + str(totalwave), True, (203, 40, 33))
 
         # показываем волну, деньги, и здоровье главной башни
         screen.blit(visual.load_image('fon/cantbuy.png', transforms=(170, const.TILE_SIZE)),

@@ -24,6 +24,8 @@ total_wave = 1
 enemies_alive = 4
 TIME_MONEY = 2000
 
+SIZE_BUTTON = (150, 60)
+
 # характеристики уровней turret
 TURRER = {'usual': [
     {

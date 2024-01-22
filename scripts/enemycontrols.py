@@ -3,6 +3,7 @@ from scripts import visual
 from scripts import enemyspawnerData
 from scripts import constants as const
 
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, sheet, columns, rows, tiles_group, castle_group, lvl, rect):
         self.healt_img = visual.font_healt_enemy.render('', True, 'BLUE')
