@@ -4,28 +4,49 @@ from scripts import constants as const
 from webbrowser import open
 
 
+class Button(pygame.sprite.Sprite):
+    def __init__(self, pos, text, image_button, shift, font_normal=visual.font.render,
+                 font_min=visual.font_text.render):
+        super().__init__(button_group)
+
+        self.image = image_button
+        self.rect = self.image.get_rect()
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.text = [font_normal(text, 1, pygame.Color('black')),
+                     font_min(text, 1, pygame.Color('black'))]
+        self.shift = shift
+
+    def update(self, surface):
+        surface.blit(self.image, self.rect)
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            surface.blit(self.text[1], (self.rect.x + 5 + self.shift[0], self.rect.y + 5 + self.shift[1]))
+        else:
+            surface.blit(self.text[0], (self.rect.x + self.shift[0], self.rect.y + self.shift[1]))
+
+
+button_group = pygame.sprite.Group()
+
+
 def menu(surface):
     # создаём рамку кнопок
 
     visual.music_fon_menu.play(-1)
 
     size_button = const.SIZE_BUTTON
-    indent_x = 70
-    kooficent_indent_y = 0.35
-
     image_button = visual.load_image('fon/cantbuy.png', transforms=size_button)
+
     # создаём фон
     fon = pygame.transform.scale(visual.load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
-    # записываем текст кнопок
-    text_button = [visual.font.render('Играть', 1, pygame.Color('black')),
-                   visual.font.render('Выйти', 1, pygame.Color('black')),
-                   visual.font_text.render('Справка', 1, pygame.Color('black'))]
-    active_text_button = [visual.font_text.render('Играть', 1, pygame.Color('black')),
-                          visual.font_text.render('Выйти', 1, pygame.Color('black')),
-                          visual.font_text_min.render('Справка', 1, pygame.Color('black'))]
+
+    # создаём кнопки
+    start = Button((180, 250), 'Играть', image_button, (size_button[0] // 4.5, size_button[1] // 5))
+    exit = Button((180, 337), 'Выйти', image_button,(size_button[0] // 4.5, size_button[1] // 5))
+    reference = Button((180, 425), 'Справка', image_button, (size_button[0] // 5, size_button[1] // 4),
+                       font_normal=visual.font_text.render, font_min=visual.font_text_min.render)
 
     hooked = False  # если навелись на кнопку
-    # settingsmenu = False
+
     running = True
     while running:
         for event in pygame.event.get():
@@ -34,92 +55,28 @@ def menu(surface):
                 running = False
 
             if event.type == pygame.MOUSEBUTTONUP:
-                x, y = event.pos
                 # если кликнули по кнопке начать, начинаем игру
-                if ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                     and const.SCREEN_HEIGHT // 2 <= y <= const.SCREEN_HEIGHT // 2 + size_button[1])):
+                if start.rect.collidepoint(event.pos):
                     visual.music_click.play()
                     return True
                 # если кликнули по кнопке выйти, заканчиваем игру
-                elif ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                       and const.SCREEN_HEIGHT // 2 * (1 + kooficent_indent_y) <= y <= const.SCREEN_HEIGHT // 2 * (
-                               1 + kooficent_indent_y) + size_button[1])):
+                elif exit.rect.collidepoint(event.pos):
                     return False
                 # если кликнули по кнопке, то открываем меню настроек
-                elif ((const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                       and const.SCREEN_HEIGHT // 2 * (1 + kooficent_indent_y * 2) <= y <= const.SCREEN_HEIGHT // 2 * (
-                               1 + kooficent_indent_y * 2) + size_button[1])):
+                elif reference.rect.collidepoint(event.pos):
                     open('https://github.com/jamkinder/towerdefense/blob/test/README.md')
-                    # surface.fill('white')
-                    # settingsmenu = True
-                # elif (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-                #       and (const.SCREEN_HEIGHT // 2 - 5) * 1.6 <= y <= (
-                #               const.SCREEN_HEIGHT // 2 - 5) * 1.8 + 75) and settingsmenu:
-                #     settingsmenu = False
-                #     visual.music_fon_menu.stop()
-                #     running = menu(surface)
-
         # показываем фон
         surface.blit(fon, (0, 0))
-        # отдельная отрисовка меню настроек
-        # if settingsmenu:
-        #     surface.fill('white')
-        #     myimage = pygame.image.load("data/im/guide/guide2.png")
-        #     imagerect = myimage.get_rect()
-        #     surface.blit(myimage, (0, 0, 400, 300))
-        #     text_ = [visual.font.render('Back', 1, pygame.Color('black'))]
-        #     for i in range(len(text_)):
-        #         x, y = pygame.mouse.get_pos()
-        #         surface.blit(image_button, (const.SCREEN_WIDTH // 2 - indent_x, 400 * (1 + i * 0.5)))
-        #
-        #         # если навелись на кнопку, то изменяем её размер
-        #         if (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-        #                 and (const.SCREEN_HEIGHT // 1.25 - 1) <= y <= (const.SCREEN_HEIGHT // 2 - 20) + 255):
-        #             surface.blit(text_[i],
-        #                          (const.SCREEN_WIDTH // 2 - 30, const.SCREEN_WIDTH // 1.15 * (1 + i * 0.45) + 5))
-        #
-        #             if not hooked:
-        #                 visual.music_hooked.play()
-        #                 hooked = True
-        #         else:
-        #             surface.blit(text_[i], (const.SCREEN_WIDTH // 2 - 35, const.SCREEN_WIDTH // 1.2 * (1 + i * 0.45)))
-        #
-        #             if (not (const.SCREEN_WIDTH // 2 - 70 <= x <= const.SCREEN_WIDTH // 2 - 70 + 150
-        #                      and (const.SCREEN_HEIGHT // 2 - 20) <= y <= (const.SCREEN_HEIGHT // 2 - 20) + 75)):
-        #                 hooked = False
-
         # показываем кнопки и все остальное
-        # if not settingsmenu:
-        for i in range(len(text_button)):
-            x, y = pygame.mouse.get_pos()
-            surface.blit(image_button,
-                         (const.SCREEN_WIDTH // 2 - indent_x,
-                          const.SCREEN_WIDTH // 2 * (1 + i * kooficent_indent_y)))
-
-            # если навелись на кнопку, то изменяем её размер
-            if (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[0]
-                    and (const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) <= y <= (
-                            const.SCREEN_HEIGHT // 2) * (1 + i * kooficent_indent_y) + size_button[1]):
-                surface.blit(active_text_button[i],
-                             (const.SCREEN_WIDTH // 2 - indent_x // 2 + 5,
-                              (const.SCREEN_HEIGHT // 2 + 15) * (1 + i * kooficent_indent_y)))
-
+        button_group.update(surface)
+        # если навелись на кнопку, то изменяем её размер
+        for button in button_group:
+            if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if not hooked:
                     visual.music_hooked.play()
                     hooked = True
-            else:
-                surface.blit(text_button[i],
-                             (const.SCREEN_WIDTH // 2 - indent_x // 2,
-                              (const.SCREEN_HEIGHT // 2 + 10) * (1 + i * kooficent_indent_y)))
 
-                if not (const.SCREEN_WIDTH // 2 - indent_x <= x <= const.SCREEN_WIDTH // 2 - indent_x + size_button[
-                    0] and
-                        (((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                const.SCREEN_HEIGHT // 2) * 1 + size_button[1]) or
-                         ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                 const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y) + kooficent_indent_y +
-                          size_button[1]) or
-                         ((const.SCREEN_HEIGHT // 2) * 1 + kooficent_indent_y <= y <= (
-                                 const.SCREEN_HEIGHT // 2) * (1 + kooficent_indent_y * 2) + size_button[1]))):
-                    hooked = False
+        if not (start.rect.collidepoint(pygame.mouse.get_pos()) or
+                exit.rect.collidepoint(pygame.mouse.get_pos()) or reference.rect.collidepoint(pygame.mouse.get_pos())):
+            hooked = False
         pygame.display.flip()
