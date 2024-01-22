@@ -74,9 +74,15 @@ def show_store():  # показывает магазин
     visual.Button(visual.tile_width * 4, HEIGHT - visual.tile_height - 5, visual.exit_image, 1, 'exit')
 
     iteration = 0
+    score = 0
     for hints in const.HINTS:
-        screen.blit(visual.load_image(hints, transforms=(97, 60)),
-                    (190, 50 + 65 * iteration))
+        score += 1
+        if len(const.HINTS) - score > 2:
+            screen.blit(visual.load_image(hints, transforms=(97, 60)),
+                        (190, 50 + 65 * iteration))
+        else:
+            screen.blit(visual.load_image(hints, transforms=(97, 50)),
+                        (190, 40 + 65 * iteration))
         iteration += 1
 
 

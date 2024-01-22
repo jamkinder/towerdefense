@@ -184,4 +184,6 @@ TURRER = {'usual': [
 HINTS = ['hints/defaulttower.png',
          'hints/green1tower.png',
          'hints/redtower1.png',
-         'hints/blacktower1.png']
+         'hints/blacktower1.png',
+         'hints/axeprice.png',
+         'hints/alphaprice.png']
