@@ -55,7 +55,7 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
         else:
             # показываем здоровье врагов
-            self.healt_img = visual.font_healt_enemy.render(str(self.healt), True, 'red')
+            self.healt_img = visual.font_healt_enemy.render(str(round(self.healt)), True, 'red')
             visual.screen.blit(self.healt_img, (self.rect.x + 5, self.rect.y - 10))
 
         # передвигаем enemy по заданной траектории

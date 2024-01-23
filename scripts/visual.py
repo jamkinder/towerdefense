@@ -141,15 +141,14 @@ class Button(pygame.sprite.Sprite):  # класс кнопок в магазин
                 clicked = False
                 music_click.play()
 
-def fade(width, height):
-    fade = pygame.Surface((width, height))
-    fade.fill((0,0,0))
-    for alpha in range(0, 155):
-        fade.set_alpha(alpha)
-        screen.blit(fade, (0,0))
-        pygame.display.update()
-        pygame.time.delay(0)
 
+def fade(width, height):
+    fades = pygame.Surface((width, height))
+    fades.fill((255, 0, 0))
+    fades.set_alpha(50)
+    screen.blit(fades, (0, 0))
+    pygame.display.update()
+    pygame.time.delay(0)
 
 
 # главная башня
@@ -298,7 +297,6 @@ music_fon_game = pygame.mixer.Sound("data/music/fon_game_m.wav")
 music_up = pygame.mixer.Sound("data/music/up_m.wav")
 music_destruction = pygame.mixer.Sound("data/music/destruction_m.wav")
 music_lose = pygame.mixer.Sound("data/music/lose_m.wav")
-
 
 # меняем громкость музыки
 music_fon_menu.set_volume(0.2)

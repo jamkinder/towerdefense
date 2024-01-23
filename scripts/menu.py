@@ -6,15 +6,15 @@ from webbrowser import open
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, pos, text, image_button, shift, font_normal=visual.font.render,
-                 font_min=visual.font_text.render):
-        super().__init__(button_group)
+                 font_min=visual.font_text.render, color='black'):
+        pygame.sprite.Sprite.__init__(self)
 
         self.image = image_button
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
-        self.text = [font_normal(text, 1, pygame.Color('black')),
-                     font_min(text, 1, pygame.Color('black'))]
+        self.text = [font_normal(text, 1, pygame.Color(color)),
+                     font_min(text, 1, pygame.Color(color))]
         self.shift = shift
 
     def update(self, surface):
@@ -27,23 +27,27 @@ class Button(pygame.sprite.Sprite):
 
 button_group = pygame.sprite.Group()
 
+size_button = const.SIZE_BUTTON
+image_button = visual.load_image('fon/cantbuy.png', transforms=size_button)
+
+# создаём кнопки
+start = Button((180, 250), 'Играть', image_button, (size_button[0] // 4.5, size_button[1] // 5))
+exit_in_menu = Button((180, 337), 'Выйти', image_button, (size_button[0] // 4.5, size_button[1] // 5))
+reference = Button((180, 425), 'Справка', image_button, (size_button[0] // 5, size_button[1] // 4),
+                   font_normal=visual.font_text.render, font_min=visual.font_text_min.render)
+exit_in_pause = Button((185, 260), 'Выйти', image_button, (size_button[0] // 4.5, size_button[1] // 5), color='white')
+
+for but in [start, exit_in_menu, reference]:
+    button_group.add(but)
+
 
 def menu(surface):
     # создаём рамку кнопок
 
     visual.music_fon_menu.play(-1)
 
-    size_button = const.SIZE_BUTTON
-    image_button = visual.load_image('fon/cantbuy.png', transforms=size_button)
-
     # создаём фон
     fon = pygame.transform.scale(visual.load_image('fon/logo.png'), (const.SCREEN_WIDTH, const.SCREEN_HEIGHT))
-
-    # создаём кнопки
-    start = Button((180, 250), 'Играть', image_button, (size_button[0] // 4.5, size_button[1] // 5))
-    exit = Button((180, 337), 'Выйти', image_button,(size_button[0] // 4.5, size_button[1] // 5))
-    reference = Button((180, 425), 'Справка', image_button, (size_button[0] // 5, size_button[1] // 4),
-                       font_normal=visual.font_text.render, font_min=visual.font_text_min.render)
 
     hooked = False  # если навелись на кнопку
 
@@ -60,7 +64,7 @@ def menu(surface):
                     visual.music_click.play()
                     return True
                 # если кликнули по кнопке выйти, заканчиваем игру
-                elif exit.rect.collidepoint(event.pos):
+                elif exit_in_menu.rect.collidepoint(event.pos):
                     return False
                 # если кликнули по кнопке, то открываем меню настроек
                 elif reference.rect.collidepoint(event.pos):
@@ -77,6 +81,6 @@ def menu(surface):
                     hooked = True
 
         if not (start.rect.collidepoint(pygame.mouse.get_pos()) or
-                exit.rect.collidepoint(pygame.mouse.get_pos()) or reference.rect.collidepoint(pygame.mouse.get_pos())):
+                exit_in_menu.rect.collidepoint(pygame.mouse.get_pos()) or reference.rect.collidepoint(pygame.mouse.get_pos())):
             hooked = False
         pygame.display.flip()

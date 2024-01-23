@@ -220,11 +220,13 @@ while running:
         # отслеживание кликов в паузе
         if event.type == pygame.MOUSEBUTTONUP and visual.flag_pause:
             x, y = event.pos
-            visual.music_fon_pause.stop()
 
-            if 160 <= x <= 360 and 275 <= y <= 350:
+            if menu.exit_in_pause.rect.collidepoint(event.pos):
+                visual.music_fon_pause.stop()
                 visual.music_click.play()
+
                 visual.flag_pause = False
+
                 running = menu.menu(screen)
                 if running:
                     (all_sprites, tiles_group, turret_group,
@@ -302,8 +304,6 @@ while running:
                 screen.blit(visual.pause_image, (0, 0))
                 screen.blit(visual.pause_text,
                             (const.SCREEN_WIDTH // 2 - const.TILE_SIZE, const.SCREEN_HEIGHT // 2 - const.TILE_SIZE))
-                screen.blit(visual.load_image('fon/cantbuy.png', transforms=(200, 75)), (160, 275))
-                screen.blit(visual.font_text.render('Выйти в меню', 1, pygame.Color((255, 255, 255))), (190, 300))
 
     # если сейчас не пауза
     if not visual.flag_pause:
@@ -396,6 +396,8 @@ while running:
         if visual.losed:
             enemy_group = pygame.sprite.Group()
             visual.lose_screen()
+    else:  # если пауза
+        menu.exit_in_pause.update(screen)
 
     # обновляем экран
     pygame.display.flip()
