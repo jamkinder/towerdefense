@@ -39,11 +39,9 @@ class Missile(pygame.sprite.Sprite):
         # если стрела коснулась врага или вышла за пределы экрана, удаляем её
         if (pygame.sprite.spritecollideany(self, self.enemy_group)
             or not 0 <= self.rect.y <= const.SCREEN_HEIGHT or not 0 <= self.rect.x <= const.SCREEN_WIDTH) or not (
-                (self.target.rect.y - self.pos[1] > 0 and self.target.rect.y - self.rect.y + self.rect[3] > 0) or (
-                (self.target.rect.y - self.pos[1] < 0 and self.target.rect.y - self.rect.y - self.rect[
-                    3] < 0))) or not (
-                (self.target.rect.x - self.pos[0] > 0 and self.target.rect.x - self.rect.x - self.rect[2] > 0) or (
-                (self.target.rect.x - self.pos[0] < 0 and self.target.rect.x - self.rect.x + self.rect[2] < 0))):
+                (self.target.rect.y - self.pos[1] > 0 and self.target.rect.y - self.rect.y - self.rect[3] > 0) or (
+                (self.target.rect.y - self.pos[1] < 0 and self.target.rect.y - self.rect.y + self.rect[
+                    3] < 0))):
 
             music_damage.play()
             # шанс крита
