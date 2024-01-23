@@ -5,23 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54b1ad21-f2b2-4dab-9dd1-b1da3a3c1a91" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data/archer_level_1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/archer_level_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/archer_level_3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/arrow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/forest.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/grassfull.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/grasshor.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/lake.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/grass.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/grass.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/gunplace.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/gunplace.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/map.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/map.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemycontrols.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/enemycontrols.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemyspawnerData.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/enemyspawnerData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tower_defense.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tower_defense.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/im/newcastle.png" beforeDir="false" afterPath="$PROJECT_DIR$/data/im/newcastle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/maps/map.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/maps/map.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/turret_stats.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/turret_stats.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visual.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/visual.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/enemycontrols.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/enemycontrols.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/enemyspawnerData.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/enemyspawnerData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/visual.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/visual.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,10 +29,11 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2ZzWvXY9eILLZ97USQgSiZGdvoH" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -46,7 +42,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main"
+    "git-widget-placeholder": "main",
+    "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -69,6 +66,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -117,5 +115,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/tower_defense$test.coverage" NAME="test Coverage Results" MODIFIED="1703696230332" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/tower_defense$visual.coverage" NAME="visual Coverage Results" MODIFIED="1703423882528" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$main.coverage" NAME="main Coverage Results" MODIFIED="1706038493555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$enemyspawner.coverage" NAME="enemyspawner Coverage Results" MODIFIED="1703409485913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$turret.coverage" NAME="turret Coverage Results" MODIFIED="1703415549081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1705601306167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$calc.coverage" NAME="calc Coverage Results" MODIFIED="1703409153294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/tower_defense$visual__1_.coverage" NAME="visual (1) Coverage Results" MODIFIED="1703527181303" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
+    <SUITE FILE_PATH="coverage/tower_defense$loosescreen.coverage" NAME="loosescreen Coverage Results" MODIFIED="1703865134329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
   </component>
 </project>
