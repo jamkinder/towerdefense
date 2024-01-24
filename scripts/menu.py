@@ -28,14 +28,14 @@ class Button(pygame.sprite.Sprite):
 button_group = pygame.sprite.Group()
 
 size_button = const.SIZE_BUTTON
-image_button = visual.load_image('fon/cantbuy.png', transforms=size_button)
+image_buttons = visual.load_image('fon/cantbuy.png', transforms=size_button)
 
 # создаём кнопки
-start = Button((180, 250), 'Играть', image_button, (size_button[0] // 4.5, size_button[1] // 5))
-exit_in_menu = Button((180, 337), 'Выйти', image_button, (size_button[0] // 4.5, size_button[1] // 5))
-reference = Button((180, 425), 'Справка', image_button, (size_button[0] // 5, size_button[1] // 4),
+start = Button((180, 250), 'Играть', image_buttons, (size_button[0] // 4.5, size_button[1] // 5))
+exit_in_menu = Button((180, 337), 'Выйти', image_buttons, (size_button[0] // 4.5, size_button[1] // 5))
+reference = Button((180, 425), 'Справка', image_buttons, (size_button[0] // 5, size_button[1] // 4),
                    font_normal=visual.font_text.render, font_min=visual.font_text_min.render)
-exit_in_pause = Button((185, 260), 'Выйти', image_button, (size_button[0] // 4.5, size_button[1] // 5), color='white')
+exit_in_pause = Button((185, 260), 'Выйти', image_buttons, (size_button[0] // 4.5, size_button[1] // 5), color='white')
 
 for but in [start, exit_in_menu, reference]:
     button_group.add(but)
@@ -68,7 +68,7 @@ def menu(surface):
                     return False
                 # если кликнули по кнопке, то открываем меню настроек
                 elif reference.rect.collidepoint(event.pos):
-                    open('https://github.com/jamkinder/towerdefense/blob/test/README.md')
+                    open('https://github.com/jamkinder/towerdefense/blob/main/README.md')
         # показываем фон
         surface.blit(fon, (0, 0))
         # показываем кнопки и все остальное

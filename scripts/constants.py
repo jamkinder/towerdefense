@@ -111,7 +111,7 @@ TURRER = {'usual': [
             "cooldown": 200,
             'cost': 800
         }],
-    'red': [   # башня с большим уроном
+    'red': [  # башня с большим уроном
         {
             # 1 level
             'im': 'red_turret/archer_level_1_red.png',
@@ -159,26 +159,26 @@ TURRER = {'usual': [
             'im': 'slowing_turret/archer_level_1_black.png',
             'damage': 100 ** 100,
             "range": 75,
-            "cooldown": 20000,
-            'cost': 100,
+            "cooldown": 100000,
+            'cost': 1000,
             'buy_cost': 500
         },
         {
             # 2 level
             'im': 'slowing_turret/archer_level_2_black.png',
-            "cooldown": 15000,
-            'cost': 250
+            "cooldown": 70000,
+            'cost': 2500
         },
         {
             # 3 level
             'im': 'slowing_turret/archer_level_3_black.png',
-            "cooldown": 10000,
+            "cooldown": 40000,
             'cost': 400
         }],
     'axe': [{'im': 'axe.png',
              'buy_cost': 100}],
-    'alpha': [{'im':'boost_icons/alphaboost.png',
-               'buy_cost':200}]
+    'alpha': [{'im': 'boost_icons/alphaboost.png',
+               'buy_cost': 200}]
 }
 
 HINTS = ['hints/defaulttower.png',
